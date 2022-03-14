@@ -18,4 +18,13 @@ from django.urls import path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # path('', views.landing_page, name="index"),
+    # path('game_list/', views.GamelistView, name="game-list"),
+    # path('game_add/', views.GameAddView, name="game-add"),
+    # path('search/', views.GameAddView, name="search"),
+    # path('game_details/', views.GameDetailsView, name="game-details"),
+    # path('login/', Login.as_view(), name="login"),
+    # path('logout/', Logout.as_view(), name="logout"),
+    # path('sing_up/', Sign_upView.as_view(), name="sing-up"),
+
 ]
