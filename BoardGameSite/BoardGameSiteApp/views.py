@@ -7,5 +7,9 @@ from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteVi
 
 class LandingPage(View):
     def get(self, request):
-        return render(request, 'main.html')
+        return render(request, 'landing_page.html')
+
+class SearchPageView(View):
+    def get(self, request):
+        return render(request, 'search_page.html')
 
