@@ -1,0 +1,51 @@
+{% extends "main.html" %}
+
+{% block section %}
+<div class="container-fluid">
+      <div class="row">
+        {% include 'side_search.html' %}
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">
+            </h1>
+          </div>
+          <div class="table-responsive">
+              <table class="table table-striped table-sm">
+                <thead>
+                  <tr>
+                    <th scope="col">filtr</th>
+                    <th scope="col">wartość</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                      <td><a href="">filt opis</a></td>
+                      <td><a href="">wartość filtra</a></td>
+                    </tr>
+                </tbody>
+              </table>
+            </div>
+        </main>
+      </div>
+    </div>
+
+<table class="table">
+  <tbody>
+    <tr>
+      <td><img src="..." class="img-thumbnail" alt="Gra1"></td>
+      <td><img src="..." class="img-thumbnail" alt="Gra2"></td>
+      <td><img src="..." class="img-thumbnail" alt="Gra3"></td>
+    </tr>
+    <tr>
+      <td><img src="..." class="img-thumbnail" alt="Gra4"></td>
+      <td><img src="..." class="img-thumbnail" alt="Gra5"></td>
+      <td><img src="..." class="img-thumbnail" alt="Gra6"></td>
+    </tr>
+    <tr>
+      <td><img src="..." class="img-thumbnail" alt="Gra7"></td>
+      <td><img src="..." class="img-thumbnail" alt="Gra8"></td>
+      <td><img src="..." class="img-thumbnail" alt="Gra9"></td>
+    </tr>
+  </tbody>
+</table>
+{% endblock %}

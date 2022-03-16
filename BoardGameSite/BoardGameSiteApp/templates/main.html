@@ -13,97 +13,36 @@
 
     {% endblock %}
   </head>
-
 <body>
     <header>
           <nav class="navbar navbar-dark bg-primary">
 
             <div class="topnav">
                 <div>
-                    <a class="active" href="#home">Home</a>
+                    <a class="active" href="{% url 'index' %}">Home</a>
                     <a href="#about">O stronie</a>
                     <a href="#contact">Kontakt</a>
-                    <a href="#search">Gry planszowe</a>
+                    <a href="{% url 'search' %}">Gry planszowe</a>
                     <a href="#contact">Dodaj grę</a>
                     <input type="text" placeholder="Szukaj gry..">
                 </div>
              </div>
             <div class="topnav">
-                <a href="login.html">logowanie</a>
-                <a href="registration.html">rejestracja</a>
+                {% if logged_user %}
+                    <p>{{user.username}} <button><a href="logout">Wyloguj</a></button></p>
+                {% else %}
+                    <a href="login.html">logowanie</a>
+                    <a href="registration.html">rejestracja</a>
+                {% endif %}
             </div>
           </nav>
     </header>
-
-    <div class="topnav" style="height: 80px; overflow: scroll;">
-            <div>Najczęstsze wyszukiwania: </div>
-            <a href="">search1</a>
-            <a href="">search2</a>
-            <a href="">search3</a>
-            <a href="">search4</a>
-            <a href="">search5</a>
-            <a href="">search6</a>
-            <a href="">search7</a>
-            <a href="">search8</a>
-            <a href="">search9</a>
+    {% block section %}
+    {% endblock %}
+    <div id="footer">
+      <footer>
+        <p>© Copyright 2022 by <a href="mailto:wierzbickikrystian@gmail.com">Krystian</a>.</p>
+      </footer>
     </div>
-
-    <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
-      <div class="carousel-indicators">
-        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
-        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
-      </div>
-      <div class="carousel-inner">
-        <div class="carousel-item active">
-            <a href="game-details/1/">
-              <img src="..." class="d-block w-100" alt="...">
-              <div class="carousel-caption d-none d-md-block">
-                <h5>Pierwsza ostatnio dodana gra</h5>
-                <p>Opis krótki gry</p>
-              </div>
-            </a>
-        </div>
-        <div class="carousel-item">
-            <a href="game-details/2/">
-            <img src="..." class="d-block w-100" alt="...">
-            <div class="carousel-caption d-none d-md-block">
-                <h5>Druga ostatnio dodana gra</h5>
-                <p>Opis krótki gry</p>
-            </div>
-            </a>
-        </div>
-        <div class="carousel-item">
-            <a href=game-details/3/">
-              <img src="..." class="d-block w-100" alt="...">
-              <div class="carousel-caption d-none d-md-block">
-                <h5>Trzecia ostatnio dodana gra</h5>
-                <p>Opis krótki gry</p>
-              </div>
-            </a>
-        </div>
-      </div>
-      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-      </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-      </button>
-    </div>
-
-    <div>
-        <p>Najczęściej wyszukiwana gra:</p>
-            <a href=game-details/3/">
-              <img src="..." class="d-block w-100" alt="...">
-              <div class="carousel-caption d-none d-md-block">
-                <h5>Tytuł najczęściej wyszukiwanej gry </h5>
-                <p>Opis krótki najczęśniej wyszukiwanej gry</p>
-              </div>
-            </a>
-        </div>
-    </div>
-
 </body>
 </html>
