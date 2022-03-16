@@ -15,7 +15,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from BoardGameSiteApp import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', views.LandingPage.as_view(), name="index"),
+    # path('game_list/', views.GamelistView, name="game-list"),
+    # path('game_add/', views.GameAddView, name="game-add"),
+    path('search/', views.SearchPageView.as_view(), name="search"),
+    # path('game_details/', views.GameDetailsView, name="game-details"),
+    # path('login/', Login.as_view(), name="login"),
+    # path('logout/', Logout.as_view(), name="logout"),
+    # path('sing_up/', Sign_upView.as_view(), name="sing-up"),
+
 ]

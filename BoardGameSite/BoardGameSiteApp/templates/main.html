@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    {% block head %}
+      {% block style %}
+      {% load static %}
+      <link href="/static/bootstrap-5.1.3-dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+      <link href="/static/styles.css" rel="stylesheet" crossorigin="anonymous">
+      <script src="/static/bootstrap-5.1.3-dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+      {% endblock%}
+      <title>{% block title %}{% endblock %} BoardGameSite</title>
+
+    {% endblock %}
+  </head>
+<body>
+    <header>
+          <nav class="navbar navbar-dark bg-primary">
+
+            <div class="topnav">
+                <div>
+                    <a class="active" href="{% url 'index' %}">Home</a>
+                    <a href="#about">O stronie</a>
+                    <a href="#contact">Kontakt</a>
+                    <a href="{% url 'search' %}">Gry planszowe</a>
+                    <a href="#contact">Dodaj grę</a>
+                    <input type="text" placeholder="Szukaj gry..">
+                </div>
+             </div>
+            <div class="topnav">
+                {% if logged_user %}
+                    <p>{{user.username}} <button><a href="logout">Wyloguj</a></button></p>
+                {% else %}
+                    <a href="login.html">logowanie</a>
+                    <a href="registration.html">rejestracja</a>
+                {% endif %}
+            </div>
+          </nav>
+    </header>
+    {% block section %}
+    {% endblock %}
+    <div id="footer">
+      <footer>
+        <p>© Copyright 2022 by <a href="mailto:wierzbickikrystian@gmail.com">Krystian</a>.</p>
+      </footer>
+    </div>
+</body>
+</html>
