@@ -1,0 +1,16 @@
+{% extends "main.html" %}
+
+{% block section %}
+<p>Mechaniki:</p>
+
+{% if error_msg%}
+    <p>{{error_msg}}</p>
+{% else %}
+    <ul>
+        {% for mechanic in mechanics %}
+            <li>{{mechanic.name}} ({{mechanic.name_pl}}) - {{mechanic.description}}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+<button><a href="{% url 'add-mechanic' %}">Dodaj mechanikę </a></button>
+{% endblock %}

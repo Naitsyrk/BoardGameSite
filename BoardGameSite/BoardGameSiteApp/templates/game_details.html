@@ -1,0 +1,20 @@
+{% extends "main.html" %}
+
+{% block section %}
+{% if game %}
+    <p>Nazwa gry: {{game.name}}</p>
+    <p>Wydawnictwo: {{game.publishing_house.name}}</p>
+    <ul>Kategorie:</ul>
+    {% for category in game.categories.all %}
+        <li>{{category.name}}</li>
+    {% endfor %}
+    <ul>Mechaniki:</ul>
+    {% for mechanic in game.mechanics.all %}
+        <li>{{mechanic.name}}</li>
+    {% endfor %}
+    <p>Liczba graczy: od {{game.minimum_players}} do {{game.maximum_players}}</p>
+    <p>Wiek graczy: {{game.minimum_age}}+</p>
+    <p>Opis gry: {{game.description}}</p>
+{% endif %}
+
+{% endblock %}

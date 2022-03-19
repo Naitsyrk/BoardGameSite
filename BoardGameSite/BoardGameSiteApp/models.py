@@ -6,8 +6,9 @@ class Category(models.Model):
     description = models.TextField(null=True)
 
 
-class Mechanics(models.Model):
+class Mechanic(models.Model):
     name = models.CharField(max_length=64)
+    name_pl = models.CharField(max_length=64)
     description = models.TextField(null=True)
 
 
@@ -16,11 +17,12 @@ class PublishingHouse(models.Model):
 
 
 class Game(models.Model):
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=64, unique=True)
     categories = models.ManyToManyField(Category)
-    mechanics = models.ManyToManyField(Mechanics)
+    mechanics = models.ManyToManyField(Mechanic)
     minimum_players = models.SmallIntegerField()
     maximum_players = models.SmallIntegerField()
     publishing_house = models.ForeignKey(PublishingHouse, on_delete=models.CASCADE)
     minimum_age = models.SmallIntegerField()
+    description = models.TextField(null=True)
 
