@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path
 from BoardGameSiteApp import views
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.LandingPage.as_view(), name="index"),
@@ -29,8 +30,8 @@ urlpatterns = [
     path('publishing_houses/', views.PublishingHouseListView.as_view(), name="publishing-houses"),
     path('search/', views.SearchPageView.as_view(), name="search"),
     path('game_details/<int:id>/', views.GameDetailsView.as_view(), name="game-details"),
+    path('game_filter/', views.game_list, name="filter-games"),
     # path('login/', Login.as_view(), name="login"),
     # path('logout/', Logout.as_view(), name="logout"),
     # path('sing_up/', Sign_upView.as_view(), name="sing-up"),
-
 ]

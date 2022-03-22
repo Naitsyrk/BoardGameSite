@@ -7,7 +7,7 @@ from django.db.models.query import EmptyQuerySet
 
 from .models import Game, PublishingHouse, Category, Mechanic
 from .form import GameAddForm
-
+from .filter import GameFilter
 
 class LandingPage(View):
     def get(self, request):
@@ -43,15 +43,13 @@ class GameAddView(CreateView):
             publishing_house_input = PublishingHouse.objects.get(id=publishing_house)
             minimum_age = form.cleaned_data['minimum_age']
             description = form.cleaned_data['description']
-            game = Game(name=name, minimum_players=minimum_players, maximum_players=maximum_players, publishing_house=publishing_house_input, minimum_age=minimum_age, description=description)
+            image = form.cleaned_data['image']
+            game = Game(name=name,
+                        minimum_players=minimum_players,
+                        maximum_players=maximum_players, publishing_house=publishing_house_input, minimum_age=minimum_age, description=description, image=image)
             game.save()
-            for category in categories:
-                category_input = Category.objects.get(id=category)
-                game.categories.add(category_input)
-            for mechanic in mechanics:
-                mechanic_input = Mechanic.objects.get(id=mechanic)
-                game.mechanics.add(mechanic_input)
-            game.save()
+            game.categories.add(*categories)
+            game.mechanics.add(*mechanics)
             response = f'stworzono ucznia: {name} i dodano do bazy'
         else:
             response = f'Wprowadź poprawne dane'
@@ -62,6 +60,7 @@ class GameAddView(CreateView):
                 'form': form,
                 'response': response
             })
+
 
 class PublishingHouseAddCreateView(CreateView):
     model = PublishingHouse
@@ -110,3 +109,7 @@ class CategoryListView(View):
             ctx = {'error_msg': "Nie ma żadnej kategorii w systemie"}
         return render(request, "categories.html", ctx)
 
+
+def game_list(request):
+    f = GameFilter(request.GET, queryset=Game.objects.all())
+    return render(request, 'filter_page.html', {'filter': f})
