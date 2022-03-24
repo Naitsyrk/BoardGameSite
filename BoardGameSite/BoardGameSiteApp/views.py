@@ -4,9 +4,10 @@ from django.views import View
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteView
 from django.db.models.query import EmptyQuerySet
+from django.contrib.auth.models import User
 
 from .models import Game, PublishingHouse, Category, Mechanic
-from .form import GameAddForm
+from .form import GameAddForm, LoginForm, UserAddForm
 from .filter import GameFilter
 
 class LandingPage(View):
@@ -113,3 +114,48 @@ class CategoryListView(View):
 def game_list(request):
     f = GameFilter(request.GET, queryset=Game.objects.all())
     return render(request, 'filter_page.html', {'filter': f})
+
+
+from django.contrib.auth import login, authenticate
+class Login(View):
+    def get(self, request):
+        form = LoginForm()
+        return render(request, 'login.html', {"form": form})
+
+    def post(self, request):
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(username=username, password=password)
+            if user is None:
+                login_error = f'Brak urzytkownika o takim loginie oraz haśle, spróbuj ponownie! {username} {password}'
+                return render(request, 'login.html', {"form": form, "login_error": login_error})
+            else:
+                login(request, user)
+                return redirect("/")
+
+
+from django.contrib.auth import logout
+class Logout(View):
+    def get(self, request):
+        logout(request)
+        return redirect("/")
+
+
+class SignUpView(View):
+    def get(self, request):
+        form = UserAddForm()
+        return render(request, 'user-add.html', {"form": form})
+
+    def post(self, request):
+        form = UserAddForm(request.POST)
+        if form.is_valid():
+            user_login = form.cleaned_data['user_login']
+            password = form.cleaned_data['password']
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
+            mail = form.cleaned_data['mail']
+            User.objects.create(username=user_login, password=password, first_name=first_name, last_name=last_name, email=mail)
+            return redirect('/login/')
+        return render(request, 'user-add.html', {"form": form})
