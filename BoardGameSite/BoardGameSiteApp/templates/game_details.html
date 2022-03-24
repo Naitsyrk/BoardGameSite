@@ -3,7 +3,9 @@
 {% block section %}
 {% if game %}
     <p>Nazwa gry: {{game.name}}</p>
-    <img src="{{game.image.path}}">
+    {% if game.image %}
+            <img src="{{game.image.path}}">
+    {% endif %}
     <p>Wydawnictwo: {{game.publishing_house.name}}</p>
     <ul>Kategorie:</ul>
     {% for category in game.categories.all %}
