@@ -5,6 +5,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteView
 from django.db.models.query import EmptyQuerySet
 
+
 from random import choice
 
 from .models import Game, PublishingHouse, Category, Mechanic
