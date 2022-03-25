@@ -1,0 +1,21 @@
+{% extends "main.html" %}
+
+{% block section %}
+
+<table class="table">
+  <tbody>
+  <tr>
+    <th>Nazwa gry:</th>
+    <th>Zdjęcie gry:</th>
+    <th>Opis gry:</th>
+  </tr>
+  {% for game in games %}
+  <tr>
+      <td><a href="url 'game-details' game.id">{{ game.name }}</a> </td>
+      <td><img src="..." class="img-thumbnail" alt="Gra1"></td>
+      <td>{{game.description}}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

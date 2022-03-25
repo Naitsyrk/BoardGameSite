@@ -1,8 +1,10 @@
 {% extends "main.html" %}
 
 {% block section %}
-    <form method="get">
+    <form method="post">
+        {% csrf_token %}
         {{ filter.form.as_p }}
+        <input type="submit" />
     </form>
 
 <ul>Lista gier spełniających kryteria:

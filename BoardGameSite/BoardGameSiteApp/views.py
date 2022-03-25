@@ -5,7 +5,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteView
 from django.db.models.query import EmptyQuerySet
 
-from random import choice
+from random import choice, sample
 
 from .models import Game, PublishingHouse, Category, Mechanic
 from .form import GameAddForm
@@ -126,3 +126,20 @@ class random_game(View):
         random_id = choice(games_ids)
         game = Game.objects.get(id=random_id)
         return redirect(f'/game_details/{game.id}')
+
+
+class RandomGamesListView(View):
+    def get(self, request):
+        f = GameFilter(request.GET, queryset=Game.objects.all())
+        return render(request, 'random_filter_page.html', {'filter': f})
+
+    def post(self, request):
+        filter = GameFilter(request.POST)
+        # random_games_number = filter.form['games_number']
+        random_games_number = 1
+        games_number = len(filter.qs)
+        if random_games_number > games_number:
+            games = filter.qs
+        else:
+            games = sample(list(filter.qs), k=random_games_number)
+        return render(request, 'random_game_list.html', {'games': games})
