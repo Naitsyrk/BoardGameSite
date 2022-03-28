@@ -34,4 +34,5 @@ urlpatterns = [
     path('login/', views.Login.as_view(), name="login"),
     path('logout/', views.Logout.as_view(), name="logout"),
     path('sign_up/', views.SignUpView.as_view(), name="sign-up"),
+    path('random_game/', views.random_game.as_view(), name="random-game"),
 ]

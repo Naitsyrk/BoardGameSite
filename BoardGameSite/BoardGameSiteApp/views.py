@@ -6,6 +6,9 @@ from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteVi
 from django.db.models.query import EmptyQuerySet
 from django.contrib.auth.models import User
 
+
+from random import choice
+
 from .models import Game, PublishingHouse, Category, Mechanic
 from .form import GameAddForm, LoginForm, UserAddForm
 from .filter import GameFilter
@@ -120,6 +123,7 @@ def game_list(request):
     return render(request, 'filter_page.html', {'filter': f})
 
 
+<<<<<<< HEAD
 from django.contrib.auth import login, authenticate
 class Login(View):
     def get(self, request):
@@ -163,3 +167,14 @@ class SignUpView(View):
             User.objects.create_user(username=user_login, password=password, first_name=first_name, last_name=last_name, email=mail)
             return redirect('/login/')
         return render(request, 'user-add.html', {"form": form})
+
+
+class random_game(View):
+    def get(self, request):
+        games = Game.objects.all()
+        games_ids = []
+        for game in games:
+            games_ids.append(game.id)
+        random_id = choice(games_ids)
+        game = Game.objects.get(id=random_id)
+        return redirect(f'/game_details/{game.id}')
