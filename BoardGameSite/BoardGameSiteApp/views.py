@@ -10,8 +10,12 @@ from .models import Game, PublishingHouse, Category, Mechanic
 from .form import GameAddForm, LoginForm, UserAddForm
 from .filter import GameFilter
 
+
 class LandingPage(View):
     def get(self, request):
+        logged_user = request.user
+        if logged_user.is_authenticated:
+            return render(request, 'landing_page.html', {'logged_user': logged_user})
         return render(request, 'landing_page.html')
 
 
@@ -156,6 +160,6 @@ class SignUpView(View):
             first_name = form.cleaned_data['first_name']
             last_name = form.cleaned_data['last_name']
             mail = form.cleaned_data['mail']
-            User.objects.create(username=user_login, password=password, first_name=first_name, last_name=last_name, email=mail)
+            User.objects.create_user(username=user_login, password=password, first_name=first_name, last_name=last_name, email=mail)
             return redirect('/login/')
         return render(request, 'user-add.html', {"form": form})

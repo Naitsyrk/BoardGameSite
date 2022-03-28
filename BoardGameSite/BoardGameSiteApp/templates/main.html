@@ -29,10 +29,13 @@
              </div>
             <div class="topnav">
                 {% if logged_user %}
-                    <p>{{user.username}} <button><a href="{% url 'logout' %}">Wyloguj</a></button></p>
+                <div>
+                    <a>{{logged_user.username}}</a>
+                    <a href="{% url 'logout' %}">Wyloguj</a>
+                </div>
                 {% else %}
                     <a href="{% url 'login' %}">logowanie</a>
-                        <a href="{% url 'sign-up' %}">rejestracja</a>
+                    <a href="{% url 'sign-up' %}">rejestracja</a>
                 {% endif %}
             </div>
           </nav>
