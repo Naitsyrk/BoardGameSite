@@ -1,15 +1,15 @@
 {% extends "main.html" %}
 
 {% block section %}
-    <form method="post">
+    <form method="get">
         {% csrf_token %}
         {{ filter.form.as_p }}
         <input type="submit" />
     </form>
 
 <ul>Lista gier spełniających kryteria:
-    {% for obj in filter.qs %}
-        <li><a href="url 'game-details' obj.id">{{ obj.name }}</a></li>
+    {% for game in games %}
+        <li><a href="url 'game-details' game.id">{{ game.name }}</a></li>
     {% endfor %}
 </ul>
 
