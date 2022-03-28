@@ -123,7 +123,6 @@ def game_list(request):
     return render(request, 'filter_page.html', {'filter': f})
 
 
-<<<<<<< HEAD
 from django.contrib.auth import login, authenticate
 class Login(View):
     def get(self, request):
