@@ -50,8 +50,3 @@ class ShelfGame(models.Model):
     shelf = models.ForeignKey(Shelf, on_delete=models.CASCADE)
     comment = models.TextField()
 
-
-
-
-
-
