@@ -31,8 +31,8 @@ urlpatterns = [
     path('search/', views.SearchPageView.as_view(), name="search"),
     path('game_details/<int:id>/', views.GameDetailsView.as_view(), name="game-details"),
     path('game_filter/', views.game_list, name="filter-games"),
+    path('login/', views.Login.as_view(), name="login"),
+    path('logout/', views.Logout.as_view(), name="logout"),
+    path('sign_up/', views.SignUpView.as_view(), name="sign-up"),
     path('random_game/', views.random_game.as_view(), name="random-game"),
-    # path('login/', Login.as_view(), name="login"),
-    # path('logout/', Logout.as_view(), name="logout"),
-    # path('sing_up/', Sign_upView.as_view(), name="sing-up"),
 ]
