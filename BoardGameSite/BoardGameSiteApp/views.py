@@ -48,17 +48,20 @@ class GameAddView(CreateView):
             minimum_players = form.cleaned_data['minimum_players']
             maximum_players = form.cleaned_data['maximum_players']
             publishing_house = form.cleaned_data['publishing_house']
-            publishing_house_input = PublishingHouse.objects.get(id=publishing_house)
             minimum_age = form.cleaned_data['minimum_age']
             description = form.cleaned_data['description']
             image = form.cleaned_data['image']
             game = Game(name=name,
                         minimum_players=minimum_players,
-                        maximum_players=maximum_players, publishing_house=publishing_house_input, minimum_age=minimum_age, description=description, image=image)
+                        maximum_players=maximum_players,
+                        publishing_house=publishing_house,
+                        minimum_age=minimum_age,
+                        description=description,
+                        image=image)
             game.save()
             game.categories.add(*categories)
             game.mechanics.add(*mechanics)
-            response = f'stworzono ucznia: {name} i dodano do bazy'
+            response = f'stworzono grę: {name} i dodano do bazy'
         else:
             response = f'Wprowadź poprawne dane'
         return render(
