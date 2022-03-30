@@ -33,7 +33,6 @@ class RandomGameFilter(django_filters.FilterSet):
     maximum_players = django_filters.NumberFilter(label="Maksymalna libcza graczy", lookup_expr='lte')
     publishing_house = django_filters.ModelChoiceFilter(queryset=PublishingHouse.objects.all(), label="Wydawnictwo", lookup_expr='exact')
     minimum_age = django_filters.NumberFilter(label="Minimalny wiek:", lookup_expr='gte')
-    games_number = django_filters.NumberFilter(label="Ilośc gier do wylosowania", lookup_expr='exact')
 
     class Meta:
         model = Game

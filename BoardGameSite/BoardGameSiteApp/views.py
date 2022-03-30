@@ -133,17 +133,5 @@ class RandomGamesListView(View):
 
     def get(self, request):
         game_filter = self.filter_class(request.GET, queryset=Game.objects.all())
-        if game_filter.is_valid():
-            random_games_number = game_filter.form.cleaned_data['games_number']
-        else:
-            random_games_number = 1
-        try:
-            random_games_number = int(random_games_number)
-        except TypeError:
-            random_games_number = 1
-        game_list_len = len(game_filter.qs)
-        if random_games_number > game_list_len:
-            games = game_filter.qs
-        else:
-            games = game_filter.qs.order_by('?')[0:random_games_number]
-        return render(request, 'random_filter_page.html', {'filter': game_filter, 'games': games})
+        game = game_filter.qs.order_by('?').first()
+        return render(request, 'random_filter_page.html', {'filter': game_filter, 'game': game})
