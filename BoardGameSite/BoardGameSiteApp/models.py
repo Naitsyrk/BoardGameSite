@@ -38,7 +38,7 @@ class Game(models.Model):
     def __str__(self):
         return self.name
 
-
+      
 class Shelf(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=64, unique=True)
@@ -49,4 +49,3 @@ class ShelfGame(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     shelf = models.ForeignKey(Shelf, on_delete=models.CASCADE)
     comment = models.TextField()
-

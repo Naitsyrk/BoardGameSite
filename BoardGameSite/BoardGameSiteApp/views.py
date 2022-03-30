@@ -7,11 +7,11 @@ from django.db.models.query import EmptyQuerySet
 from django.contrib.auth.models import User
 
 
-from random import choice
+from random import choice, sample
 
-from .models import Game, PublishingHouse, Category, Mechanic, Shelf, ShelfGame
+from .models import Game, PublishingHouse, Category, Mechanic, ShelfGame
 from .form import GameAddForm, LoginForm, UserAddForm
-from .filter import GameFilter
+from .filter import GameFilter, RandomGameFilter
 
 
 class LandingPage(View):
@@ -179,6 +179,15 @@ class random_game(View):
         return redirect(f'/game_details/{game.id}')
 
 
+class RandomGamesListView(View):
+    filter_class = RandomGameFilter
+
+    def get(self, request):
+        game_filter = self.filter_class(request.GET, queryset=Game.objects.all())
+        game = game_filter.qs.order_by('?').first()
+        return render(request, 'random_filter_page.html', {'filter': game_filter, 'game': game})
+
+      
 class ShelvesView(View):
     template = 'shelves.html'
 
