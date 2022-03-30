@@ -1,0 +1,17 @@
+{% extends "main.html" %}
+
+{% block section %}
+<section>
+  <div>
+    <ul>Twoje gry na półce {{shelf.name}}
+      {% if games %}
+        {% for game in games %}
+          <li><a href="{% url 'game-details' game.id %}">{{game.name}}</a></li>
+        {% endfor %}
+      {% else %}
+        <li> Nie masz gry na tej półce</li>
+      {% endif %}
+    </ul>
+  </div>
+</section>
+{% endblock %}
