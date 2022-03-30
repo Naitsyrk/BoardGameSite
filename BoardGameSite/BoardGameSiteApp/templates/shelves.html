@@ -1,0 +1,24 @@
+{% extends "main.html" %}
+
+{% block section %}
+<section>
+  <div>
+    <ul>Twoje półki:
+      {% if shelves %}
+        {% for shelf in shelves %}
+          <li><a href="{% url 'shelf-details' shelf.id %}">{{shelf.name}}</a></li>
+        {% endfor %}
+      {% else %}
+        <li> Nie masz żadnej półki</li>
+      {% endif %}
+      <li>
+          <form action="{% url 'shelves' %}" method="post">
+          {% csrf_token %}
+          <input type="text", name="shelf_name", value="Podaj nazwę nowej półki">
+          <input type="submit">
+        </form>
+      </li>
+    </ul>
+  </div>
+</section>
+{% endblock %}

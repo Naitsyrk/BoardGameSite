@@ -4,15 +4,21 @@ from django.views import View
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteView
 from django.db.models.query import EmptyQuerySet
+from django.contrib.auth.models import User
+
 
 from random import choice, sample
 
-from .models import Game, PublishingHouse, Category, Mechanic
-from .form import GameAddForm
+from .models import Game, PublishingHouse, Category, Mechanic, ShelfGame
+from .form import GameAddForm, LoginForm, UserAddForm
 from .filter import GameFilter, RandomGameFilter
+
 
 class LandingPage(View):
     def get(self, request):
+        logged_user = request.user
+        if logged_user.is_authenticated:
+            return render(request, 'landing_page.html', {'logged_user': logged_user})
         return render(request, 'landing_page.html')
 
 
@@ -117,6 +123,51 @@ def game_list(request):
     return render(request, 'filter_page.html', {'filter': f})
 
 
+from django.contrib.auth import login, authenticate
+class Login(View):
+    def get(self, request):
+        form = LoginForm()
+        return render(request, 'login.html', {"form": form})
+
+    def post(self, request):
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(username=username, password=password)
+            if user is None:
+                login_error = f'Brak urzytkownika o takim loginie oraz haśle, spróbuj ponownie! {username} {password}'
+                return render(request, 'login.html', {"form": form, "login_error": login_error})
+            else:
+                login(request, user)
+                return redirect("/")
+
+
+from django.contrib.auth import logout
+class Logout(View):
+    def get(self, request):
+        logout(request)
+        return redirect("/")
+
+
+class SignUpView(View):
+    def get(self, request):
+        form = UserAddForm()
+        return render(request, 'user-add.html', {"form": form})
+
+    def post(self, request):
+        form = UserAddForm(request.POST)
+        if form.is_valid():
+            user_login = form.cleaned_data['user_login']
+            password = form.cleaned_data['password']
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
+            mail = form.cleaned_data['mail']
+            User.objects.create_user(username=user_login, password=password, first_name=first_name, last_name=last_name, email=mail)
+            return redirect('/login/')
+        return render(request, 'user-add.html', {"form": form})
+
+
 class random_game(View):
     def get(self, request):
         games = Game.objects.all()
@@ -135,3 +186,41 @@ class RandomGamesListView(View):
         game_filter = self.filter_class(request.GET, queryset=Game.objects.all())
         game = game_filter.qs.order_by('?').first()
         return render(request, 'random_filter_page.html', {'filter': game_filter, 'game': game})
+
+      
+class ShelvesView(View):
+    template = 'shelves.html'
+
+    def get(self, request):
+        logged_user = request.user
+        if logged_user.is_authenticated:
+            shelves = Shelf.objects.filter(user=logged_user)
+            return render(request, self.template, {
+                'logged_user': logged_user,
+                'shelves': shelves
+            })
+        else:
+            return redirect('/login/')
+
+    def post(self, request):
+        logged_user = request.user
+        shelf_name = request.POST.get('shelf_name')
+        Shelf.objects.create(user=logged_user, name=shelf_name)
+        shelves = Shelf.objects.filter(user=logged_user)
+        return render(request, self.template, {
+            'logged_user': logged_user,
+            'shelves': shelves
+        })
+
+
+class ShelfDetailsView(View):
+    def get(self, request, shelf_id):
+        logged_user = request.user
+        shelf = Shelf.objects.get(id=shelf_id)
+        games = ShelfGame.objects.filter(shelf__user=logged_user)
+        if logged_user.is_authenticated:
+            return render(request, 'shelf_details.html', {
+                'games': games,
+                'logged_user': logged_user,
+                'shelf': shelf
+            })

@@ -25,16 +25,23 @@
                     <a href="{% url 'search' %}">Gry planszowe</a>
                     <a href="{% url 'add-game'%}">Dodaj grę</a>
                     <a href="{% url 'random-game' %}">Losuj grę</a>
+
                     <a href="{% url 'random-game-but' %}">Filtruj i Losuj</a>
+                    {% if logged_user %}
+                        <a href="{% url 'shelves'%}">Moje półki</a>
+                    {% endif %}
                     <input type="text" placeholder="Szukaj gry..">
                 </div>
              </div>
             <div class="topnav">
                 {% if logged_user %}
-                    <p>{{user.username}} <button><a href="logout">Wyloguj</a></button></p>
+                <div>
+                    <a>{{logged_user.username}}</a>
+                    <a href="{% url 'logout' %}">Wyloguj</a>
+                </div>
                 {% else %}
-                    <a href="login.html">logowanie</a>
-                    <a href="registration.html">rejestracja</a>
+                    <a href="{% url 'login' %}">logowanie</a>
+                    <a href="{% url 'sign-up' %}">rejestracja</a>
                 {% endif %}
             </div>
           </nav>
