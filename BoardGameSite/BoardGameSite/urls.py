@@ -35,4 +35,6 @@ urlpatterns = [
     path('logout/', views.Logout.as_view(), name="logout"),
     path('sign_up/', views.SignUpView.as_view(), name="sign-up"),
     path('random_game/', views.random_game.as_view(), name="random-game"),
+    path('shelves/', views.ShelvesView.as_view(), name="shelves"),
+    path('shelf/<int:shelf_id>', views.ShelfDetailsView.as_view(), name="shelf-details"),
 ]

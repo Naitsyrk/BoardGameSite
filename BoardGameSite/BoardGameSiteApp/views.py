@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 
 from random import choice
 
-from .models import Game, PublishingHouse, Category, Mechanic
+from .models import Game, PublishingHouse, Category, Mechanic, Shelf, ShelfGame
 from .form import GameAddForm, LoginForm, UserAddForm
 from .filter import GameFilter
 
@@ -177,3 +177,41 @@ class random_game(View):
         random_id = choice(games_ids)
         game = Game.objects.get(id=random_id)
         return redirect(f'/game_details/{game.id}')
+
+
+class ShelvesView(View):
+    template = 'shelves.html'
+
+    def get(self, request):
+        logged_user = request.user
+        if logged_user.is_authenticated:
+            shelves = Shelf.objects.filter(user=logged_user)
+            return render(request, self.template, {
+                'logged_user': logged_user,
+                'shelves': shelves
+            })
+        else:
+            return redirect('/login/')
+
+    def post(self, request):
+        logged_user = request.user
+        shelf_name = request.POST.get('shelf_name')
+        Shelf.objects.create(user=logged_user, name=shelf_name)
+        shelves = Shelf.objects.filter(user=logged_user)
+        return render(request, self.template, {
+            'logged_user': logged_user,
+            'shelves': shelves
+        })
+
+
+class ShelfDetailsView(View):
+    def get(self, request, shelf_id):
+        logged_user = request.user
+        shelf = Shelf.objects.get(id=shelf_id)
+        games = ShelfGame.objects.filter(shelf__user=logged_user)
+        if logged_user.is_authenticated:
+            return render(request, 'shelf_details.html', {
+                'games': games,
+                'logged_user': logged_user,
+                'shelf': shelf
+            })
