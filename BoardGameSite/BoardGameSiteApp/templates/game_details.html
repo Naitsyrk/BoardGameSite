@@ -2,6 +2,13 @@
 
 {% block section %}
 {% if game %}
+    {% if logged_user %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{form.as_table}}
+        <input type="submit" value="Dodaj">
+    </form>
+    {% endif %}
     <p>Nazwa gry: {{game.name}}</p>
         <img src='{{ game.image.url }}' alt="game" style="width: 40%; float: left; margin-right: 10px;" />
     <p>Wydawnictwo: {{game.publishing_house.name}}</p>
@@ -16,6 +23,14 @@
     <p>Liczba graczy: od {{game.minimum_players}} do {{game.maximum_players}}</p>
     <p>Wiek graczy: {{game.minimum_age}}+</p>
     <p>Opis gry: {{game.description}}</p>
+    <ul>Lista półek na których masz tą grę:</ul>
+    {% if shelves %}
+        {% for shelf in shelves %}
+            <li>{{shelf.name}} <a href="{% url 'delete-from-shelf' shelf.id game.id %}"> Usuń z półki</a></li>
+        {% endfor %}
+    {% else %}
+        <li>Brak gry na półkach</li>
+    {% endif %}
 {% endif %}
 
 {% endblock %}

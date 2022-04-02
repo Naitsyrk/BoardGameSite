@@ -39,4 +39,5 @@ urlpatterns = [
     path('random_game_but/', views.RandomGamesListView.as_view(), name="random-game-but"),
     path('shelves/', views.ShelvesView.as_view(), name="shelves"),
     path('shelf/<int:shelf_id>', views.ShelfDetailsView.as_view(), name="shelf-details"),
+    path('delete_game_from_shelf/<int:shelf_id>/<int:game_id>/', views.DelateGameFromShelfView.as_view(), name="delete-from-shelf")
 ]
