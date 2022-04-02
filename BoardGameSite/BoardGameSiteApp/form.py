@@ -27,7 +27,6 @@ class GameAddForm(forms.ModelForm):
                   'minimum_age',
                   'description',
                   'image',
-
                   )
 
 class LoginForm(forms.Form):

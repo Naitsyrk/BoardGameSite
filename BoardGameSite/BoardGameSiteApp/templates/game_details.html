@@ -3,7 +3,7 @@
 {% block section %}
 {% if game %}
     <p>Nazwa gry: {{game.name}}</p>
-        <img src="{{game.image.path}}">
+        <img src='{{ game.image.url }}' alt="game" style="width: 40%; float: left; margin-right: 10px;" />
     <p>Wydawnictwo: {{game.publishing_house.name}}</p>
     <ul>Kategorie:</ul>
     {% for category in game.categories.all %}
