@@ -40,25 +40,11 @@ class GameAddView(CreateView):
         return render(request, 'add-game.html', {'form': form})
 
     def post(self, request):
-        form = GameAddForm(request.POST)
+        form = GameAddForm(request.POST, request.FILES)
         if form.is_valid():
+            form.save()
             name = form.cleaned_data['name']
-            categories = form.cleaned_data['categories']
-            mechanics = form.cleaned_data['mechanics']
-            minimum_players = form.cleaned_data['minimum_players']
-            maximum_players = form.cleaned_data['maximum_players']
-            publishing_house = form.cleaned_data['publishing_house']
-            publishing_house_input = PublishingHouse.objects.get(id=publishing_house)
-            minimum_age = form.cleaned_data['minimum_age']
-            description = form.cleaned_data['description']
-            image = form.cleaned_data['image']
-            game = Game(name=name,
-                        minimum_players=minimum_players,
-                        maximum_players=maximum_players, publishing_house=publishing_house_input, minimum_age=minimum_age, description=description, image=image)
-            game.save()
-            game.categories.add(*categories)
-            game.mechanics.add(*mechanics)
-            response = f'stworzono ucznia: {name} i dodano do bazy'
+            response = f'stworzono grę: {name} i dodano do bazy'
         else:
             response = f'Wprowadź poprawne dane'
         return render(

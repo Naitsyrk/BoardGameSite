@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from .models import Game, Mechanic,  Category, PublishingHouse
 
 
-class GameAddForm(forms.Form):
+class GameAddForm(forms.ModelForm):
     name = forms.CharField(label='Nazwa gry', max_length=64)
     categories = forms.ModelMultipleChoiceField(label="Kategorie:", queryset=Category.objects.all(), widget=forms.CheckboxSelectMultiple)
     mechanics = forms.ModelMultipleChoiceField(label="Mechaniki:", queryset=Mechanic.objects.all(), widget=forms.CheckboxSelectMultiple)
@@ -14,8 +14,20 @@ class GameAddForm(forms.Form):
     publishing_house = forms.ModelChoiceField(label="Wydawnictwo:", queryset=PublishingHouse.objects.all())
     minimum_age = forms.IntegerField(label="Wiek minimalny:")
     description = forms.CharField(label='Opis gry:')
-    image = forms.ImageField(label='Zdjęcie gry:')
+    image = forms.ImageField(label='Zdjęcie gry:', required=False)
 
+    class Meta:
+        model = Game
+        fields = ('name',
+                  'categories',
+                  'mechanics',
+                  'minimum_players',
+                  'maximum_players',
+                  'publishing_house',
+                  'minimum_age',
+                  'description',
+                  'image',
+                  )
 
 class LoginForm(forms.Form):
     username = forms.CharField(label='Username')

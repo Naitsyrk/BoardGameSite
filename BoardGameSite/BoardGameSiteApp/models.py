@@ -33,7 +33,7 @@ class Game(models.Model):
     publishing_house = models.ForeignKey(PublishingHouse, on_delete=models.CASCADE)
     minimum_age = models.SmallIntegerField()
     description = models.TextField(null=True)
-    image = models.ImageField(upload_to="media", null=True)
+    image = models.ImageField(upload_to="images/", null=True, blank=True)
 
     def __str__(self):
         return self.name
