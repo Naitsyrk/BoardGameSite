@@ -17,14 +17,19 @@ from .filter import GameFilter, RandomGameFilter
 class LandingPage(View):
     def get(self, request):
         logged_user = request.user
+        last_added_games = Game.objects.all().order_by('-id')[:3]
+        first_game = last_added_games.first()
+        other_games = last_added_games[1:]
+        ctx = {"other_games": other_games, 'first_game': first_game}
         if logged_user.is_authenticated:
-            return render(request, 'landing_page.html', {'logged_user': logged_user})
-        return render(request, 'landing_page.html')
+            ctx['logged_user'] = logged_user
+            return render(request, 'landing_page.html', ctx)
+        return render(request, 'landing_page.html', ctx)
 
 
 class SearchPageView(View):
     def get(self, request):
-        return render(request, 'search_page.html')
+        return render(request, 'filter_page.html')
 
 
 class GameDetailsView(View):
@@ -240,3 +245,15 @@ class DelateGameFromShelfView(View):
         game = Game.objects.get(id=game_id)
         shelf.games.remove(game)
         return redirect(f'/game_details/{game.id}')
+
+
+class About(View):
+    def get(self, request):
+        return render(request, 'about.html')
+
+
+class Contact(View):
+    def get(self, request):
+        return render(request, 'contact.html')
+
+

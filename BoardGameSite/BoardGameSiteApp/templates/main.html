@@ -20,8 +20,8 @@
             <div class="topnav">
                 <div>
                     <a class="active" href="{% url 'index' %}">Home</a>
-                    <a href="#about">O stronie</a>
-                    <a href="#contact">Kontakt</a>
+                    <a href="{% url 'about' %}">O stronie</a>
+                    <a href="{% url 'contact' %}">Kontakt</a>
                     <a href="{% url 'search' %}">Gry planszowe</a>
                     <a href="{% url 'add-game'%}">Dodaj grę</a>
                     <a href="{% url 'random-game' %}">Losuj grę</a>
@@ -30,7 +30,7 @@
                     {% if logged_user %}
                         <a href="{% url 'shelves'%}">Moje półki</a>
                     {% endif %}
-                    <input type="text" placeholder="Szukaj gry..">
+                    <input type="text" name="initial_filter_name" placeholder="Szukaj gry..">
                 </div>
              </div>
             <div class="topnav">

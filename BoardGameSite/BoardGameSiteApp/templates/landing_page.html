@@ -22,33 +22,25 @@
         <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
       </div>
       <div class="carousel-inner">
-        <div class="carousel-item active">
-            <a href="game-details/1/">
-              <img src="..." class="d-block w-100" alt="...">
-              <div class="carousel-caption d-none d-md-block">
-                <h5>Pierwsza ostatnio dodana gra</h5>
-                <p>Opis krótki gry</p>
-              </div>
-            </a>
-        </div>
-        <div class="carousel-item">
-            <a href="game-details/2/">
-            <img src="..." class="d-block w-100" alt="...">
-            <div class="carousel-caption d-none d-md-block">
-                <h5>Druga ostatnio dodana gra</h5>
-                <p>Opis krótki gry</p>
+          <p>Ostatnio dodane gry:</p>
+            <div class="carousel-item active">
+                <a href="{% url 'game-details' first_game.id %}">
+                  <center><img src="{{ first_game.image.url }}" alt="game" style="width: 20%; text-align:center"/></center>
+                  <div class="carousel-caption d-none d-md-block">
+                    <h5>{{game.name}}</h5>
+                  </div>
+                </a>
             </div>
-            </a>
-        </div>
-        <div class="carousel-item">
-            <a href=game-details/3/">
-              <img src="..." class="d-block w-100" alt="...">
-              <div class="carousel-caption d-none d-md-block">
-                <h5>Trzecia ostatnio dodana gra</h5>
-                <p>Opis krótki gry</p>
-              </div>
-            </a>
-        </div>
+          {% for game in other_games %}
+            <div class="carousel-item">
+                <a href="{% url 'game-details' game.id %}">
+                  <center><img src="{{ game.image.url }}" alt="game" style="width: 20%"/></center>
+                  <div class="carousel-caption d-none d-md-block">
+                    <h5>{{game.name}}</h5>
+                  </div>
+                </a>
+            </div>
+          {% endfor %}
       </div>
       <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>

@@ -1,15 +1,13 @@
-{% extends "main.html" %}
+{% extends "search_page.html" %}
 
-{% block section %}
+{% block filter %}
+    <p> Filtry:</p>
     <form method="get">
         {{ filter.form.as_p }}
+        <input type="submit" />
     </form>
 
 <ul>Lista gier spełniających kryteria:
-    {% for obj in filter.qs %}
-        <li><a href="url 'game-details' obj.id">{{ obj.name }}</a></li>
-    {% endfor %}
+
 </ul>
-
-
 {% endblock %}
