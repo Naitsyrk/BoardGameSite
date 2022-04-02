@@ -9,8 +9,8 @@ from django.contrib.auth.models import User
 
 from random import choice, sample
 
-from .models import Game, PublishingHouse, Category, Mechanic, ShelfGame
-from .form import GameAddForm, LoginForm, UserAddForm
+from .models import Game, PublishingHouse, Category, Mechanic, ShelfGame, Shelf
+from .form import GameAddForm, LoginForm, UserAddForm, AddGameToShelfForm
 from .filter import GameFilter, RandomGameFilter
 
 
@@ -29,8 +29,30 @@ class SearchPageView(View):
 
 class GameDetailsView(View):
     def get(self, request, id):
+        logged_user = request.user
         game = Game.objects.get(id=id)
         ctx = {'game': game}
+        if logged_user.is_authenticated:
+            form = AddGameToShelfForm()
+            ctx['form'] = form
+            ctx['logged_user'] = logged_user
+        shelves = Shelf.objects.filter(user=logged_user).filter(games=game)
+        ctx['shelves'] = shelves
+        return render(request, 'game_details.html', ctx)
+
+    def post(self, request, id):
+        logged_user = request.user
+        game = Game.objects.get(id=id)
+        ctx = {'game': game}
+        if logged_user.is_authenticated:
+            form = AddGameToShelfForm(request.POST)
+            ctx['form'] = form
+            ctx['logged_user'] = logged_user
+            if form.is_valid():
+                shelf = form.cleaned_data['shelf']
+                shelf.games.add(game)
+        shelves = Shelf.objects.filter(user=logged_user).filter(games=game)
+        ctx['shelves'] = shelves
         return render(request, 'game_details.html', ctx)
 
 
@@ -210,3 +232,11 @@ class ShelfDetailsView(View):
                 'logged_user': logged_user,
                 'shelf': shelf
             })
+
+
+class DelateGameFromShelfView(View):
+    def get(self, request, shelf_id, game_id):
+        shelf = Shelf.objects.get(id=shelf_id)
+        game = Game.objects.get(id=game_id)
+        shelf.games.remove(game)
+        return redirect(f'/game_details/{game.id}')

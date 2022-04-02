@@ -2,7 +2,7 @@ from django import forms
 from django.core.validators import EmailValidator
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
-from .models import Game, Mechanic,  Category, PublishingHouse
+from .models import Game, Mechanic,  Category, PublishingHouse, ShelfGame, Shelf
 
 
 class GameAddForm(forms.ModelForm):
@@ -43,7 +43,10 @@ class UserAddForm(forms.Form):
     mail = forms.CharField(label="Mail:", validators=[EmailValidator])
 
 
-
 class ResetPasswordForm(forms.Form):
     password = forms.CharField(label='Password', widget=forms.PasswordInput)
     repeat_password = forms.CharField(label='Repeat Password', widget=forms.PasswordInput)
+
+
+class AddGameToShelfForm(forms.Form):
+    shelf = forms.ModelChoiceField(label="Dodaj grę do półki:", queryset=Shelf.objects.all())
