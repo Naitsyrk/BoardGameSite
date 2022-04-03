@@ -6,7 +6,7 @@
     <ul>Twoje półki:
       {% if shelves %}
         {% for shelf in shelves %}
-          <li><a href="{% url 'shelf-details' shelf.id %}">{{shelf.name}}</a></li>
+          <li><a href="{% url 'shelf-details' shelf.id %}">{{shelf.name}}</a> <button style="background-color: lightgray; color: black"><a href="{% url 'edit-shelf' shelf.id %}">zmień nazwę</a></button></li>
         {% endfor %}
       {% else %}
         <li> Nie masz żadnej półki</li>
@@ -20,5 +20,44 @@
       </li>
     </ul>
   </div>
+    <div>
+        <table>
+            <thead>
+              <tr>
+                <th>Nazwa półki</th>
+                <th>Liczba gier na półce</th>
+                <th>Akcje</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% if shelves %}
+                {% for shelf in shelves %}
+                  <tr>
+                    <td><a href="{% url 'shelf-details' shelf.id %}">{{shelf.name}}</a> </td>
+                    <td></td>
+                    <td><button style="background-color: lightgray; color: black"><a href="{% url 'edit-shelf' shelf.id %}">zmień nazwę</a></button></td>
+                  </tr>
+                {% endfor %}
+              <tr>
+                <form action="{% url 'shelves' %}" method="post">
+                  <td>
+                      {% csrf_token %}
+                      <input type="text", name="shelf_name", placeholder="Podaj nazwę nowej półki">
+                  </td>
+                    <td></td>
+                    <td>
+                      <input type="submit" value="Dodaj półkę">
+                    </td>
+                </form>
+              </tr>
+              {% else %}
+                <tr>
+                    <td> Nie masz żadnej półki </td>
+                </tr>
+              {% endif %}
+
+            </tbody>
+        </table>
+    </div>
 </section>
 {% endblock %}
