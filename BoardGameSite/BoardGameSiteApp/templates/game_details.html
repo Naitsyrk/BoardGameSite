@@ -3,11 +3,11 @@
 {% block section %}
 {% if game %}
     {% if logged_user %}
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{form.as_table}}
-        <input type="submit" value="Dodaj">
-    </form>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{form.as_table}}
+            <input type="submit" value="Dodaj">
+        </form>
     {% endif %}
     <p>Nazwa gry: {{game.name}}</p>
         <img src='{{ game.image.url }}' alt="game" style="width: 40%; float: left; margin-right: 10px;" />
@@ -26,7 +26,28 @@
     <ul>Lista półek na których masz tą grę:</ul>
     {% if shelves %}
         {% for shelf in shelves %}
-            <li>{{shelf.name}} <a href="{% url 'delete-from-shelf' shelf.id game.id %}"> Usuń z półki</a></li>
+            <li><a href="{% url 'shelf-details' shelf.id %}">{{shelf.name}}</a>
+                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{game.id}}">Usuń grę</button>
+                <div class="modal fade" id="deleteModal{{game.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Usuwanie gry z półki</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <p>Czy na pewno chcesz usunąć grę:{{game.name}} z półki: {{shelf.name}} {{shelf.name}}</p>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
+                        <button type="button" class="btn btn-danger">
+                          <a style="color: white" href="{% url 'delete-game-from-shelf' shelf.id game.id %}"> Usuń z półki</a>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </li>
         {% endfor %}
     {% else %}
         <li>Brak gry na półkach</li>

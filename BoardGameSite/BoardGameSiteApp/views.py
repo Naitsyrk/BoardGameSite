@@ -32,9 +32,10 @@ class GameDetailsView(View):
         logged_user = request.user
         game = Game.objects.get(id=id)
         ctx = {'game': game}
+        form = AddGameToShelfForm()
+        form.fields['shelf'].queryset = Shelf.objects.filter(user=logged_user)
+        ctx['form'] = form
         if logged_user.is_authenticated:
-            form = AddGameToShelfForm()
-            ctx['form'] = form
             ctx['logged_user'] = logged_user
         shelves = Shelf.objects.filter(user=logged_user).filter(games=game)
         ctx['shelves'] = shelves
@@ -45,11 +46,13 @@ class GameDetailsView(View):
         game = Game.objects.get(id=id)
         ctx = {'game': game}
         if logged_user.is_authenticated:
-            form = AddGameToShelfForm(request.POST)
-            ctx['form'] = form
             ctx['logged_user'] = logged_user
+            form = AddGameToShelfForm(request.POST)
+            form.fields['shelf'].queryset = Shelf.objects.filter(user=logged_user)
             if form.is_valid():
                 shelf = form.cleaned_data['shelf']
+                shelf.games.add(game)
+                ctx['form'] = form
                 shelf.games.add(game)
         shelves = Shelf.objects.filter(user=logged_user).filter(games=game)
         ctx['shelves'] = shelves
@@ -236,7 +239,7 @@ class ShelfDetailsView(View):
     def get(self, request, shelf_id):
         logged_user = request.user
         shelf = Shelf.objects.get(id=shelf_id)
-        games = ShelfGame.objects.filter(shelf__user=logged_user)
+        games = [game for game in shelf.games.all()]
         if logged_user.is_authenticated:
             return render(request, 'shelf_details.html', {
                 'games': games,
@@ -253,6 +256,14 @@ class DeleteGameFromShelfView(View):
         return redirect(f'/game_details/{game.id}')
 
 
+class DeleteFromShelfGameView(View):
+    def get(self, request, shelf_id, game_id):
+        shelf = Shelf.objects.get(id=shelf_id)
+        game = Game.objects.get(id=game_id)
+        shelf.games.remove(game)
+        return redirect(f'/shelf/{shelf.id}')
+
+
 class About(View):
     def get(self, request):
         return render(request, 'about.html')
@@ -260,7 +271,6 @@ class About(View):
 
 class Contact(View):
     def get(self, request):
-        form = ShelfForm()
         return render(request, 'contact.html')
 
 
@@ -279,3 +289,11 @@ class ShelfEditView(View):
         shelf.name = name
         shelf.save()
         return redirect('/shelves/')
+
+
+class ShelfDeleteView(View):
+    def get(self, request, id):
+        shelf = Shelf.objects.get(id=id).delete()
+        return redirect('/shelves/')
+
+
