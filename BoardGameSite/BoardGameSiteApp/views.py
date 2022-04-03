@@ -20,7 +20,7 @@ class LandingPage(View):
         last_added_games = Game.objects.all().order_by('-id')[:3]
         first_game = last_added_games.first()
         other_games = last_added_games[1:]
-        ctx = {"other_games": other_games, 'first_game': first_game}
+        ctx = {"other_games": other_games, 'first_game': first_game, 'logged_user': logged_user}
         if logged_user.is_authenticated:
             ctx['logged_user'] = logged_user
             return render(request, 'landing_page.html', ctx)
@@ -61,10 +61,12 @@ class GameDetailsView(View):
 
 class GameAddView(CreateView):
     def get(self, request):
+        logged_user = request.user
         form = GameAddForm()
-        return render(request, 'add-game.html', {'form': form})
+        return render(request, 'add-game.html', {'form': form, 'logged_user': logged_user})
 
     def post(self, request):
+        logged_user = request.user
         form = GameAddForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
@@ -77,7 +79,8 @@ class GameAddView(CreateView):
             'add-game.html',
             {
                 'form': form,
-                'response': response
+                'response': response,
+                'logged_user': logged_user
             })
 
 
@@ -131,15 +134,17 @@ class CategoryListView(View):
 
 class GameList(View):
     def get(self, request):
+        logged_user = request.user
         f = GameFilter(request.GET, queryset=Game.objects.all())
-        return render(request, 'filter_page.html', {'filter': f})
+        return render(request, 'filter_page.html', {'filter': f, 'logged_user': logged_user})
 
     def post(self, request):
+        logged_user = request.user
         f = GameFilter(request.GET, queryset=Game.objects.all())
         init_name = request.POST.get('init_name')
         f.data = f.data.copy()
         f.data.setdefault('name', init_name)
-        return render(request, 'filter_page.html', {'filter': f})
+        return render(request, 'filter_page.html', {'filter': f, 'logged_user': logged_user})
 
 
 from django.contrib.auth import login, authenticate
@@ -205,9 +210,10 @@ class RandomGamesListView(View):
     filter_class = RandomGameFilter
 
     def get(self, request):
+        logged_user = request.user
         game_filter = self.filter_class(request.GET, queryset=Game.objects.all())
         game = game_filter.qs.order_by('?').first()
-        return render(request, 'random_filter_page.html', {'filter': game_filter, 'game': game})
+        return render(request, 'random_filter_page.html', {'filter': game_filter, 'game': game, 'logged_user': logged_user})
 
       
 class ShelvesView(View):
@@ -250,6 +256,7 @@ class ShelfDetailsView(View):
 
 class DeleteGameFromShelfView(View):
     def get(self, request, shelf_id, game_id):
+        logged_user = request.user
         shelf = Shelf.objects.get(id=shelf_id)
         game = Game.objects.get(id=game_id)
         shelf.games.remove(game)
@@ -266,24 +273,29 @@ class DeleteFromShelfGameView(View):
 
 class About(View):
     def get(self, request):
-        return render(request, 'about.html')
+        logged_user = request.user
+        return render(request, 'about.html', {'logged_user': logged_user})
 
 
 class Contact(View):
     def get(self, request):
-        return render(request, 'contact.html')
+        logged_user = request.user
+        return render(request, 'contact.html', {'logged_user': logged_user})
 
 
 class ShelfEditView(View):
     def get(self, request, id):
+        logged_user = request.user
         shelf = Shelf.objects.get(id=id)
         return render(request,
                       'edit_shelf.html',
                       {
                           'shelf': shelf,
+                          'logged_user': logged_user
                       })
 
     def post(self, request, id):
+        logged_user = request.user
         shelf = Shelf.objects.get(id=id)
         name = request.POST.get('name')
         shelf.name = name
@@ -297,3 +309,35 @@ class ShelfDeleteView(View):
         return redirect('/shelves/')
 
 
+class GameListShelfView(View):
+    def get(self, request, id):
+        logged_user = request.user
+        shelf = Shelf.objects.get(id=id)
+        f = GameFilter(request.GET, queryset=shelf.games.all())
+        return render(request, 'filter_shelf.html', {'filter': f, 'shelf': shelf, 'logged_user': logged_user})
+
+    def post(self, request, id):
+        logged_user = request.user
+        shelf = Shelf.objects.get(id=id)
+        f = GameFilter(request.GET, queryset=shelf.games.all())
+        init_name = request.POST.get('init_name')
+        f.data = f.data.copy()
+        f.data.setdefault('name', init_name)
+        return render(request, 'filter_shelf.html', {'filter': f, 'shelf': shelf, 'logged_user':logged_user})
+
+
+class GameListShelvesView(View):
+    def get(self, request):
+        logged_user = request.user
+        games = Game.objects.filter(shelf__user=logged_user).distinct()
+        f = GameFilter(request.GET, queryset=games)
+        return render(request, 'filter_shelves.html', {'filter': f})
+
+    def post(self, request):
+        logged_user = request.user
+        games = Game.objects.filter(shelf__user=logged_user).distinct()
+        f = GameFilter(request.GET, queryset=games)
+        init_name = request.POST.get('init_name')
+        f.data = f.data.copy()
+        f.data.setdefault('name', init_name)
+        return render(request, 'filter_shelves.html', {'filter': f})

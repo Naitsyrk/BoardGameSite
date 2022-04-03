@@ -26,7 +26,7 @@
     <ul>Lista półek na których masz tą grę:</ul>
     {% if shelves %}
         {% for shelf in shelves %}
-            <li><a href="{% url 'shelf-details' shelf.id %}">{{shelf.name}}</a>
+            <li><a href="{% url 'shelf-search' shelf.id %}">{{shelf.name}}</a>
                 <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{game.id}}">Usuń grę</button>
                 <div class="modal fade" id="deleteModal{{game.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                   <div class="modal-dialog">

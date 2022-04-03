@@ -3,6 +3,11 @@
 {% block section %}
 <section>
     <div>
+        <form class="d-flex" action="{% url 'shelves-search' %}" method=POST>
+            {% csrf_token %}
+            <input class="form-control me-2" type="text" name="init_name" placeholder="Szukaj gry na swoich półkach">
+            <button class="btn btn-outline-secondary" type="submit">Szukaj</button>
+        </form>
         <table>
             <thead>
               <tr>
@@ -15,7 +20,7 @@
               {% if shelves %}
                 {% for shelf in shelves %}
                   <tr>
-                    <td><a href="{% url 'shelf-details' shelf.id %}">{{shelf.name}}</a> </td>
+                    <td><a href="{% url 'shelf-search' shelf.id %}">{{shelf.name}}</a> </td>
                     <td>{{shelf.games.count}}</td>
                     <td>
                         <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#editModal{{shelf.id}}">Zmień nazwę</button>
