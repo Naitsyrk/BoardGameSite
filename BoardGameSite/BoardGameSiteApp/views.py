@@ -197,6 +197,7 @@ class SignUpView(View):
 
 class RandomGame(View):
     def get(self, request):
+        logged_user = request.user
         games = Game.objects.all()
         games_ids = []
         for game in games:
@@ -265,6 +266,7 @@ class DeleteGameFromShelfView(View):
 
 class DeleteFromShelfGameView(View):
     def get(self, request, shelf_id, game_id):
+        logged_user = request.user
         shelf = Shelf.objects.get(id=shelf_id)
         game = Game.objects.get(id=game_id)
         shelf.games.remove(game)
@@ -305,6 +307,7 @@ class ShelfEditView(View):
 
 class ShelfDeleteView(View):
     def get(self, request, id):
+        logged_user = request.user
         shelf = Shelf.objects.get(id=id).delete()
         return redirect('/shelves/')
 
