@@ -51,3 +51,4 @@ class ResetPasswordForm(forms.Form):
 
 class AddGameToShelfForm(forms.Form):
     shelf = forms.ModelChoiceField(label="Dodaj grę do półki:", queryset=Shelf.objects.all())
+

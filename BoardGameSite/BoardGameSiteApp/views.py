@@ -181,7 +181,8 @@ class SignUpView(View):
             mail = form.cleaned_data['mail']
             User.objects.create_user(username=user_login, password=password, first_name=first_name, last_name=last_name, email=mail)
             new_user = User.objects.get(username=user_login)
-            Shelf.objects.create()
+            Shelf.objects.create(user=new_user, name="Posiadane")
+            Shelf.objects.create(user=new_user, name="Wishlist")
             return redirect('/login/')
         return render(request, 'user-add.html', {"form": form})
 
@@ -259,6 +260,22 @@ class About(View):
 
 class Contact(View):
     def get(self, request):
+        form = ShelfForm()
         return render(request, 'contact.html')
 
 
+class ShelfEditView(View):
+    def get(self, request, id):
+        shelf = Shelf.objects.get(id=id)
+        return render(request,
+                      'edit_shelf.html',
+                      {
+                          'shelf': shelf,
+                      })
+
+    def post(self, request, id):
+        shelf = Shelf.objects.get(id=id)
+        name = request.POST.get('name')
+        shelf.name = name
+        shelf.save()
+        return redirect('/shelves/')

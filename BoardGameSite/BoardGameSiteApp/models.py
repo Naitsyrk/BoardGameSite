@@ -53,8 +53,8 @@ class GameCategory(models.Model):
 
 class Shelf(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=64, unique=True)
-    games = models.ManyToManyField(Game, through='ShelfGame', null=True)
+    name = models.CharField(max_length=64)
+    games = models.ManyToManyField(Game, through='ShelfGame')
 
     def __str__(self):
         return self.name

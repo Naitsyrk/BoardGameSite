@@ -13,11 +13,8 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
 from django.urls import path
 from BoardGameSiteApp import views
-from django.conf import settings
-from django.conf.urls.static import static
 
 
 urlpatterns = [
@@ -37,8 +34,9 @@ urlpatterns = [
     path('random_game/', views.RandomGame.as_view(), name="random-game"),
     path('random_game_but/', views.RandomGamesListView.as_view(), name="random-game-but"),
     path('shelves/', views.ShelvesView.as_view(), name="shelves"),
-    path('shelf/<int:shelf_id>', views.ShelfDetailsView.as_view(), name="shelf-details"),
+    path('shelf/<int:shelf_id>/', views.ShelfDetailsView.as_view(), name="shelf-details"),
     path('delete_game_from_shelf/<int:shelf_id>/<int:game_id>/', views.DeleteGameFromShelfView.as_view(), name="delete-from-shelf"),
     path('about/', views.About.as_view(), name='about'),
     path('contact/', views.Contact.as_view(), name='contact'),
+    path('edit_shelf/<int:id>/', views.ShelfEditView.as_view(), name='edit-shelf'),
 ]
