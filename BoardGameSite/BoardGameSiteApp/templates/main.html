@@ -20,8 +20,8 @@
             <div class="topnav">
                 <div>
                     <a class="active" href="{% url 'index' %}">Home</a>
-                    <a href="#about">O stronie</a>
-                    <a href="#contact">Kontakt</a>
+                    <a href="{% url 'about' %}">O stronie</a>
+                    <a href="{% url 'contact' %}">Kontakt</a>
                     <a href="{% url 'search' %}">Gry planszowe</a>
                     <a href="{% url 'add-game'%}">Dodaj grę</a>
                     <a href="{% url 'random-game' %}">Losuj grę</a>
@@ -30,7 +30,11 @@
                     {% if logged_user %}
                         <a href="{% url 'shelves'%}">Moje półki</a>
                     {% endif %}
-                    <input type="text" placeholder="Szukaj gry..">
+                    <form class="d-flex" action="{% url 'search' %}" method=POST>
+                        {% csrf_token %}
+                        <input class="form-control me-2" type="text" name="init_name" placeholder="Szukaj gry..">
+                        <button class="btn btn-outline-secondary" type="submit">Szukaj</button>
+                    </form>
                 </div>
              </div>
             <div class="topnav">

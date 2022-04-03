@@ -17,14 +17,14 @@ from .filter import GameFilter, RandomGameFilter
 class LandingPage(View):
     def get(self, request):
         logged_user = request.user
+        last_added_games = Game.objects.all().order_by('-id')[:3]
+        first_game = last_added_games.first()
+        other_games = last_added_games[1:]
+        ctx = {"other_games": other_games, 'first_game': first_game}
         if logged_user.is_authenticated:
-            return render(request, 'landing_page.html', {'logged_user': logged_user})
-        return render(request, 'landing_page.html')
-
-
-class SearchPageView(View):
-    def get(self, request):
-        return render(request, 'search_page.html')
+            ctx['logged_user'] = logged_user
+            return render(request, 'landing_page.html', ctx)
+        return render(request, 'landing_page.html', ctx)
 
 
 class GameDetailsView(View):
@@ -126,9 +126,17 @@ class CategoryListView(View):
         return render(request, "categories.html", ctx)
 
 
-def game_list(request):
-    f = GameFilter(request.GET, queryset=Game.objects.all())
-    return render(request, 'filter_page.html', {'filter': f})
+class GameList(View):
+    def get(self, request):
+        f = GameFilter(request.GET, queryset=Game.objects.all())
+        return render(request, 'filter_page.html', {'filter': f})
+
+    def post(self, request):
+        f = GameFilter(request.GET, queryset=Game.objects.all())
+        init_name = request.POST.get('init_name')
+        f.data = f.data.copy()
+        f.data.setdefault('name', init_name)
+        return render(request, 'filter_page.html', {'filter': f})
 
 
 from django.contrib.auth import login, authenticate
@@ -172,11 +180,13 @@ class SignUpView(View):
             last_name = form.cleaned_data['last_name']
             mail = form.cleaned_data['mail']
             User.objects.create_user(username=user_login, password=password, first_name=first_name, last_name=last_name, email=mail)
+            new_user = User.objects.get(username=user_login)
+            Shelf.objects.create()
             return redirect('/login/')
         return render(request, 'user-add.html', {"form": form})
 
 
-class random_game(View):
+class RandomGame(View):
     def get(self, request):
         games = Game.objects.all()
         games_ids = []
@@ -234,9 +244,21 @@ class ShelfDetailsView(View):
             })
 
 
-class DelateGameFromShelfView(View):
+class DeleteGameFromShelfView(View):
     def get(self, request, shelf_id, game_id):
         shelf = Shelf.objects.get(id=shelf_id)
         game = Game.objects.get(id=game_id)
         shelf.games.remove(game)
         return redirect(f'/game_details/{game.id}')
+
+
+class About(View):
+    def get(self, request):
+        return render(request, 'about.html')
+
+
+class Contact(View):
+    def get(self, request):
+        return render(request, 'contact.html')
+
+

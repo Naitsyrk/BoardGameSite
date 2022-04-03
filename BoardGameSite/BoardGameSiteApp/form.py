@@ -29,6 +29,7 @@ class GameAddForm(forms.ModelForm):
                   'image',
                   )
 
+
 class LoginForm(forms.Form):
     username = forms.CharField(label='Username')
     password = forms.CharField(label='Password', widget=forms.PasswordInput)
