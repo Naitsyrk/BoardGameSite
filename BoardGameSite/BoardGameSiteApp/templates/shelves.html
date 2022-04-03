@@ -2,24 +2,6 @@
 
 {% block section %}
 <section>
-  <div>
-    <ul>Twoje półki:
-      {% if shelves %}
-        {% for shelf in shelves %}
-          <li><a href="{% url 'shelf-details' shelf.id %}">{{shelf.name}}</a> <button style="background-color: lightgray; color: black"><a href="{% url 'edit-shelf' shelf.id %}">zmień nazwę</a></button></li>
-        {% endfor %}
-      {% else %}
-        <li> Nie masz żadnej półki</li>
-      {% endif %}
-      <li>
-          <form action="{% url 'shelves' %}" method="post">
-          {% csrf_token %}
-          <input type="text", name="shelf_name", value="Podaj nazwę nowej półki">
-          <input type="submit">
-        </form>
-      </li>
-    </ul>
-  </div>
     <div>
         <table>
             <thead>
@@ -34,15 +16,59 @@
                 {% for shelf in shelves %}
                   <tr>
                     <td><a href="{% url 'shelf-details' shelf.id %}">{{shelf.name}}</a> </td>
-                    <td></td>
-                    <td><button style="background-color: lightgray; color: black"><a href="{% url 'edit-shelf' shelf.id %}">zmień nazwę</a></button></td>
+                    <td>{{shelf.games.count}}</td>
+                    <td>
+                        <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#editModal{{shelf.id}}">Zmień nazwę</button>
+                        <div class="modal fade" id="editModal{{shelf.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Zmiana nazwy półki</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                                <form action="{% url 'edit-shelf' shelf.id%}" method="post">
+                                    {% csrf_token %}
+                                    <input type="text" value="{{shelf.name}}" name="name">
+                                    <input type="submit" value="Zmień nazwę">
+                                </form>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
+                                <button type="button" class="btn btn-primary"><a href="{% url 'edit-shelf' shelf.id %}">Zmień nazwę</a></button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{shelf.id}}">Usuń półkę
+                        </button>
+                        <div class="modal fade" id="deleteModal{{shelf.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Usuwanie półki</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                                <p>Czy na pewno chcesz usunąć półkę: {{shelf.name}}</p>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
+                                <a href="{% url 'delete-shelf' shelf.id %}">
+                                    <button type="button" class="btn btn-danger">Usuń półkę</button>
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                    </td>
                   </tr>
                 {% endfor %}
               <tr>
                 <form action="{% url 'shelves' %}" method="post">
                   <td>
                       {% csrf_token %}
-                      <input type="text", name="shelf_name", placeholder="Podaj nazwę nowej półki">
+                      <input type="text", name="shelf_name", placeholder="Podaj nazwę nowej półki" required>
                   </td>
                     <td></td>
                     <td>

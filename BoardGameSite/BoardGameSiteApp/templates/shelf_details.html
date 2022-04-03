@@ -3,10 +3,30 @@
 {% block section %}
 <section>
   <div>
-    <ul>Twoje gry na półce {{shelf.name}}
+    <ul>Twoje gry na półce: {{shelf.name}}
       {% if games %}
         {% for game in games %}
-          <li><a href="{% url 'game-details' game.id %}">{{game.name}}</a></li>
+          <li><a href="{% url 'game-details' game.id %}">{{game.name}}</a>
+            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{game.id}}">Usuń grę</button>
+            <div class="modal fade" id="deleteModal{{game.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Usuwanie gry z półki</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                      <p>Czy na pewno chcesz usunąć grę:{{game.name}} z półki: {{shelf.name}} {{shelf.name}}</p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
+                    <button type="button" class="btn btn-danger">
+                      <a style="color: white" href="{% url 'delete-from-shelf-game' shelf.id game.id %}"> Usuń z półki</a>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
         {% endfor %}
       {% else %}
         <li> Nie masz gry na tej półce</li>
