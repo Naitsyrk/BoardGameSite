@@ -1,0 +1,20 @@
+{% extends "main.html" %}
+
+{% block section %}
+  {% block filter %}
+  {% endblock %}
+<table class="table">
+  <tbody>
+    {% for obj in filter.qs %}
+      <tr>
+        <td>
+          <a href="{% url 'game-details' obj.id %}">
+            <img src='{{ obj.image.url }}' alt="game" style="width: 200px; float: left; margin-right: 10px;" />
+          </a>
+        </td>
+        <td><a href="{% url 'game-details' obj.id %}">{{ obj.name }}</a></td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
