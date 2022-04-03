@@ -27,11 +27,6 @@ class LandingPage(View):
         return render(request, 'landing_page.html', ctx)
 
 
-class SearchPageView(View):
-    def get(self, request):
-        return render(request, 'filter_page.html')
-
-
 class GameDetailsView(View):
     def get(self, request, id):
         logged_user = request.user
@@ -131,9 +126,17 @@ class CategoryListView(View):
         return render(request, "categories.html", ctx)
 
 
-def game_list(request):
-    f = GameFilter(request.GET, queryset=Game.objects.all())
-    return render(request, 'filter_page.html', {'filter': f})
+class GameList(View):
+    def get(self, request):
+        f = GameFilter(request.GET, queryset=Game.objects.all())
+        return render(request, 'filter_page.html', {'filter': f})
+
+    def post(self, request):
+        f = GameFilter(request.GET, queryset=Game.objects.all())
+        init_name = request.POST.get('init_name')
+        f.data = f.data.copy()
+        f.data.setdefault('name', init_name)
+        return render(request, 'filter_page.html', {'filter': f})
 
 
 from django.contrib.auth import login, authenticate
@@ -177,11 +180,13 @@ class SignUpView(View):
             last_name = form.cleaned_data['last_name']
             mail = form.cleaned_data['mail']
             User.objects.create_user(username=user_login, password=password, first_name=first_name, last_name=last_name, email=mail)
+            new_user = User.objects.get(username=user_login)
+            Shelf.objects.create()
             return redirect('/login/')
         return render(request, 'user-add.html', {"form": form})
 
 
-class random_game(View):
+class RandomGame(View):
     def get(self, request):
         games = Game.objects.all()
         games_ids = []
@@ -239,7 +244,7 @@ class ShelfDetailsView(View):
             })
 
 
-class DelateGameFromShelfView(View):
+class DeleteGameFromShelfView(View):
     def get(self, request, shelf_id, game_id):
         shelf = Shelf.objects.get(id=shelf_id)
         game = Game.objects.get(id=game_id)
