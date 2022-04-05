@@ -85,6 +85,18 @@
                 <tr>
                     <td> Nie masz żadnej półki </td>
                 </tr>
+                  <tr>
+                    <form action="{% url 'shelves' %}" method="post">
+                      <td>
+                          {% csrf_token %}
+                          <input type="text", name="shelf_name", placeholder="Podaj nazwę nowej półki" required>
+                      </td>
+                        <td></td>
+                        <td>
+                          <input type="submit" value="Dodaj półkę">
+                        </td>
+                    </form>
+                  </tr>
               {% endif %}
 
             </tbody>
