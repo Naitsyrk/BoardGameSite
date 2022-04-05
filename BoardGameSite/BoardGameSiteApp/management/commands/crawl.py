@@ -1,0 +1,18 @@
+from django.core.management.base import BaseCommand
+from scraper.scraper.spiders.aleplanszowkispider import AlePlanszowkiSpider
+from scrapy.crawler import CrawlerProcess
+from scrapy.utils.project import get_project_settings
+
+import sys
+
+class Command(BaseCommand):
+  help = "Release the spiders"
+
+
+  def handle(self, *args, **options):
+      process = CrawlerProcess(get_project_settings())
+
+      process.crawl(AlePlanszowkiSpider)
+      process.start()
+
+

@@ -63,3 +63,14 @@ class Shelf(models.Model):
 class ShelfGame(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     shelf = models.ForeignKey(Shelf, on_delete=models.CASCADE)
+
+
+class AlePlanszowkiGame(models.Model):
+    name = models.CharField(max_length=124)
+    price = models.FloatField()
+    link = models.TextField()
+    availability = models.BooleanField()
+    scarp_date = models.DateField(auto_now_add=True, null=True)
+
+    class Meta:
+        verbose_name = "Gra"
