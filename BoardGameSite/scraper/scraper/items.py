@@ -1,7 +1,7 @@
 from scrapy_djangoitem import DjangoItem
-from BoardGameSiteApp.models import AlePlanszowkiGame
+from BoardGameSiteApp.models import APGame
 
 
 class AlePlanszowkiGameItem(DjangoItem):
-    django_model = AlePlanszowkiGame
+    django_model = APGame
 
