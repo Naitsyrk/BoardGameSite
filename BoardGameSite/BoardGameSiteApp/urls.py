@@ -36,11 +36,11 @@ urlpatterns = [
     path('random_game/', views.RandomGame.as_view(), name="random-game"),
     path('random_game_but/', views.RandomGamesListView.as_view(), name="random-game-but"),
     path('shelves/', views.ShelvesView.as_view(), name="shelves"),
-    path('shelf/<int:shelf_id>/', views.ShelfDetailsView.as_view(), name="shelf-details"),
     path('delete_game_from_shelf/<int:shelf_id>/<int:game_id>/', views.DeleteGameFromShelfView.as_view(), name="delete-game-from-shelf"),
     path('delete_from_shelf_game/<int:shelf_id>/<int:game_id>/', views.DeleteFromShelfGameView.as_view(), name="delete-from-shelf-game"),
     path('about/', views.About.as_view(), name='about'),
     path('contact/', views.Contact.as_view(), name='contact'),
     path('edit_shelf/<int:id>/', views.ShelfEditView.as_view(), name='edit-shelf'),
     path('delete_shelf/<int:id>/', views.ShelfDeleteView.as_view(), name='delete-shelf'),
+    path('move_game/<int:shelf_id>/<int:game_id>/', views.MoveGameView.as_view(), name="move-game"),
 ]
