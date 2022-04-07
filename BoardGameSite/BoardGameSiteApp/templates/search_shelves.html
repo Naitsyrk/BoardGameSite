@@ -3,7 +3,15 @@
 {% block section %}
   {% block filter %}
   {% endblock %}
+<p>Lista gier na Twoich półkach spełniających kryteria:</p>
 <table class="table">
+    <thead class="thead-dark">
+    <tr>
+      <th scope="col">Zdjęcie</th>
+      <th scope="col">Nazwa gry</th>
+      <th scope="col">Akcje</th>
+    </tr>
+  </thead>
   <tbody>
     {% for obj in filter.qs %}
       <tr>
@@ -13,6 +21,7 @@
           </a>
         </td>
         <td><a href="{% url 'game-details' obj.id %}">{{ obj.name }}</a></td>
+        <td>akcja</td>
       </tr>
     {% endfor %}
   </tbody>

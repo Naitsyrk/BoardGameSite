@@ -242,19 +242,6 @@ class ShelvesView(View):
         })
 
 
-class ShelfDetailsView(View):
-    def get(self, request, shelf_id):
-        logged_user = request.user
-        shelf = Shelf.objects.get(id=shelf_id)
-        games = [game for game in shelf.games.all()]
-        if logged_user.is_authenticated:
-            return render(request, 'shelf_details.html', {
-                'games': games,
-                'logged_user': logged_user,
-                'shelf': shelf
-            })
-
-
 class DeleteGameFromShelfView(View):
     def get(self, request, shelf_id, game_id):
         logged_user = request.user
@@ -317,7 +304,17 @@ class GameListShelfView(View):
         logged_user = request.user
         shelf = Shelf.objects.get(id=id)
         f = GameFilter(request.GET, queryset=shelf.games.all())
-        return render(request, 'filter_shelf.html', {'filter': f, 'shelf': shelf, 'logged_user': logged_user})
+        form = AddGameToShelfForm()
+        form.fields['shelf'].queryset = Shelf.objects.filter(user=logged_user).exclude(name=shelf.name)
+        return render(
+            request,
+            'filter_shelf.html',
+            {
+                'filter': f,
+                'shelf': shelf,
+                'logged_user': logged_user,
+                "form": form,
+            })
 
     def post(self, request, id):
         logged_user = request.user
@@ -344,3 +341,17 @@ class GameListShelvesView(View):
         f.data = f.data.copy()
         f.data.setdefault('name', init_name)
         return render(request, 'filter_shelves.html', {'filter': f})
+
+
+class MoveGameView(View):
+    def post(self, request, game_id, shelf_id):
+        logged_user = request.user
+        game = Game.objects.get(id=game_id)
+        form = AddGameToShelfForm(request.POST)
+        init_shelf = Shelf.objects.get(id=shelf_id)
+        if form.is_valid():
+            new_shelf = form.cleaned_data['shelf']
+            new_shelf.games.add(game)
+            init_shelf.games.remove(game)
+        return redirect(f'/shelf_search/{init_shelf.id}/')
+
