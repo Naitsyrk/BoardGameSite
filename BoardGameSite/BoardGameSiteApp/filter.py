@@ -45,5 +45,3 @@ class RandomGameFilter(django_filters.FilterSet):
             'publishing_house',
             'minimum_age',
         ]
-
-
