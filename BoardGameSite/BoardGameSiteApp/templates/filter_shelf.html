@@ -1,18 +1,21 @@
 {% extends "search_page.html" %}
 
+{% block random %}
+    <div class="row topnav">
+        <div class="col-8"></div>
+        <div class="col-2">
+            <a href="{% url 'random-game-shelf' shelf.id%}">Losój grę z tej półki</a>
+        </div>
+        <div class="col-2">
+            <a href="{% url 'random-game-shelf-but' shelf.id%}">Losój grę z filtrami</a>
+        </div>
+    </div>
+{% endblock %}
+
 {% block filter %}
-<nav class="navbar navbar-dark bg-primary">
-             </div>
-            <div class="topnav">
-                    <a href="{% url 'random-game-shelf' shelf.id%}">Losój grę z tej półki</a>
-                    <a href="{% url 'random-game-shelf-but' shelf.id%}">Losój grę z filtrami</a>
-            </div>
-          </nav>
     <p> Filtry:</p>
     <form method="get">
         {{ filter.form.as_p }}
         <input type="submit" />
     </form>
-
-
 {% endblock %}
