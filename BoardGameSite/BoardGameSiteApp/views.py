@@ -2,11 +2,12 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.views.generic.edit import CreateView
 from django.contrib.auth.models import User
-
+from django.contrib.auth import login, authenticate
+from django.contrib.auth import logout
 
 from random import choice
 
-from .models import Game, PublishingHouse, Category, Mechanic, ShelfGame, Shelf
+from .models import Game, PublishingHouse, Category, Mechanic, Shelf
 from .form import GameAddForm, LoginForm, UserAddForm, AddGameToShelfForm
 from .filter import GameFilter, RandomGameFilter
 
@@ -144,7 +145,6 @@ class GameList(View):
         return render(request, 'filter_page.html', {'filter': f, 'logged_user': logged_user})
 
 
-from django.contrib.auth import login, authenticate
 class Login(View):
     def get(self, request):
         form = LoginForm()
@@ -164,7 +164,6 @@ class Login(View):
                 return redirect("/")
 
 
-from django.contrib.auth import logout
 class Logout(View):
     def get(self, request):
         logout(request)
@@ -320,7 +319,7 @@ class GameListShelfView(View):
         init_name = request.POST.get('init_name')
         f.data = f.data.copy()
         f.data.setdefault('name', init_name)
-        return render(request, 'filter_shelf.html', {'filter': f, 'shelf': shelf, 'logged_user':logged_user})
+        return render(request, 'filter_shelf.html', {'filter': f, 'shelf': shelf, 'logged_user': logged_user})
 
 
 class GameListShelvesView(View):
