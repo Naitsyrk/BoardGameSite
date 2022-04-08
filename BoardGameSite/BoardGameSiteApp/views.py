@@ -1,13 +1,10 @@
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views import View
-from django.core.exceptions import ObjectDoesNotExist
-from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteView
-from django.db.models.query import EmptyQuerySet
+from django.views.generic.edit import CreateView
 from django.contrib.auth.models import User
 
 
-from random import choice, sample
+from random import choice
 
 from .models import Game, PublishingHouse, Category, Mechanic, ShelfGame, Shelf
 from .form import GameAddForm, LoginForm, UserAddForm, AddGameToShelfForm

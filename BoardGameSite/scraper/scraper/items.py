@@ -4,4 +4,3 @@ from BoardGameSiteApp.models import APGame
 
 class AlePlanszowkiGameItem(DjangoItem):
     django_model = APGame
-

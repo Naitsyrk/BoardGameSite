@@ -1,8 +1,6 @@
 from django import forms
 from django.core.validators import EmailValidator
-from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.models import User
-from .models import Game, Mechanic,  Category, PublishingHouse, ShelfGame, Shelf
+from .models import Game, Mechanic,  Category, PublishingHouse, Shelf
 
 
 class GameAddForm(forms.ModelForm):
