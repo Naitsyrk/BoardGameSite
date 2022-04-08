@@ -1,0 +1,16 @@
+{% extends "main.html" %}
+
+{% block section %}
+<p>Wybierz dane do losowania gry na półce: {{shelf.name}}</p>
+    <form method="get">
+        {% csrf_token %}
+        {{ filter.form.as_p }}
+        <input type="submit" />
+    </form>
+
+<ul>Wylosowana gra to:
+    <li><a href="url 'game-details' game.id">{{ game.name }}</a></li>
+</ul>
+
+
+{% endblock %}

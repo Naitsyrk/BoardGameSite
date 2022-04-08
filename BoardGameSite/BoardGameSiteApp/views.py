@@ -355,3 +355,26 @@ class MoveGameView(View):
             init_shelf.games.remove(game)
         return redirect(f'/shelf_search/{init_shelf.id}/')
 
+
+class RandomGameShelfView(View):
+    def get(self, request, shelf_id):
+        logged_user = request.user
+        games = Game.objects.filter(shelf__user=logged_user).filter(shelf__id=shelf_id).distinct()
+        games_ids = []
+        for game in games:
+            games_ids.append(game.id)
+        random_id = choice(games_ids)
+        game = Game.objects.get(id=random_id)
+        return redirect(f'/game_details/{game.id}')
+
+
+class RandomGamesShelfListView(View):
+    filter_class = RandomGameFilter
+
+    def get(self, request, shelf_id):
+        logged_user = request.user
+        shelf = Shelf.objects.get(id=shelf_id)
+        games = Game.objects.filter(shelf__user=logged_user).filter(shelf__id=shelf_id).distinct()
+        game_filter = self.filter_class(request.GET, queryset=games)
+        game = game_filter.qs.order_by('?').first()
+        return render(request, 'random_filter_shelf.html', {'filter': game_filter, 'game': game, 'logged_user': logged_user, 'shelf': shelf})
