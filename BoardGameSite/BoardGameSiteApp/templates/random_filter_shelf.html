@@ -1,16 +1,39 @@
 {% extends "main.html" %}
 
 {% block section %}
-<p>Wybierz dane do losowania gry na półce: {{shelf.name}}</p>
-    <form method="get">
-        {% csrf_token %}
-        {{ filter.form.as_p }}
-        <input type="submit" />
-    </form>
-
-<ul>Wylosowana gra to:
-    <li><a href="url 'game-details' game.id">{{ game.name }}</a></li>
-</ul>
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            <p>Wybierz dane do losowania gry na półce: {{shelf.name}}</p>
+                <form method="get">
+                    {% csrf_token %}
+                    {{ filter.form.as_p }}
+                    <input type="submit" />
+                </form>
+        </div>
+        <div class="col-9">
+            <p>Wylosowana gra to:</p>
+          <table class="table">
+              <thead class="thead-dark">
+                  <tr>
+                    <th scope="col">Zdjęcie</th>
+                    <th scope="col">Nazwa gry</th>
+                  </tr>
+              </thead>
+            <tbody>
+                <tr>
+                  <td>
+                    <a href="{% url 'game-details' game.id %}">
+                      <img src='{{ game.image.url }}' alt="game" style="width: 200px; float: left; margin-right: 10px;" />
+                    </a>
+                  </td>
+                  <td><a href="{% url 'game-details' game.id %}">{{ game.name }}</a></td>
+                </tr>
+            </tbody>
+          </table>
+        </div>
+    </div>
+</div>
 
 
 {% endblock %}

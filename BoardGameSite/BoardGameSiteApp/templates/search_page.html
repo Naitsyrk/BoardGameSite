@@ -1,75 +1,85 @@
 {% extends "main.html" %}
 
 {% block section %}
-  {% block filter %}
-  {% endblock %}
-<p>Lista gier spełniająca kryteria:</p>
-<table class="table">
-    <thead class="thead-dark">
-    <tr>
-      <th scope="col">Zdjęcie</th>
-      <th scope="col">Nazwa gry</th>
-      <th scope="col">Usunięcie gry z półki</th>
-      <th scope="col">Przeniesienie gry z półki</th>
-    </tr>
-    </thead>
-    <tbody>
-      {% for obj in filter.qs %}
-        <tr>
-          <td>
-            <a href="{% url 'game-details' obj.id %}">
-              <img src='{{ obj.image.url }}' alt="game" style="width: 200px; float: left; margin-right: 10px;" /></td>
-            </a>
-          <td><a href="{% url 'game-details' obj.id %}">{{ obj.name }}</a></td>
-          <td>
-            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{obj.id}}">Usuń grę</button>
-                <div class="modal fade" id="deleteModal{{obj.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Usuwanie gry z półki</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <div class="modal-body">
-                          <p>Czy na pewno chcesz usunąć grę:{{game.name}} z półki: {{shelf.name}}</p>
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
-                        <button type="button" class="btn btn-danger">
-                          <a style="color: white" href="{% url 'delete-from-shelf-game' shelf.id obj.id %}"> Usuń z półki</a>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-            </td>
-          <td>
-            <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#moveModal{{obj.id}}">Przenieś grę</button>
-                <div class="modal fade" id="moveModal{{obj.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="exampleMoveModalLabel">Przenieś grę</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <div class="modal-body">
-                        <p>Obecna półka: {{shelf.name}}</p>
-                        <p>Wybierz półkę na którą chcesz przenieść grę:{{obj.name}}:</p>
-                        <form method="post" action="{% url 'move-game' shelf.id obj.id %}" enctype="multipart/form-data">
-                            {% csrf_token %}
-                            {{form.as_p}}
-                            <input type="submit" value="Przenieś">
-                        </form>
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-            </td>
-        </tr>
-      {% endfor %}
-    </tbody>
-</table>
+<div class="container">
+    {% block random %}
+    {% endblock %}
+    <div class="row">
+        <div class="col-3">
+            {% block filter %}
+            {% endblock %}
+        </div>
+        <div class="col-9">
+            <p>Lista gier spełniająca kryteria:</p>
+            <table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                          <th scope="col">Zdjęcie</th>
+                          <th scope="col">Nazwa gry</th>
+                          <th scope="col">Usunięcie gry z półki</th>
+                          <th scope="col">Przeniesienie gry z półki</th>
+                        </tr>
+                    </thead>
+                <tbody>
+                  {% for obj in filter.qs %}
+                    <tr>
+                      <td>
+                        <a href="{% url 'game-details' obj.id %}">
+                          <img src='{{ obj.image.url }}' alt="game" style="width: 200px; float: left; margin-right: 10px;" /></td>
+                        </a>
+                      <td><a href="{% url 'game-details' obj.id %}">{{ obj.name }}</a></td>
+                      <td>
+                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{obj.id}}">Usuń grę</button>
+                            <div class="modal fade" id="deleteModal{{obj.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Usuwanie gry z półki</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                      <p>Czy na pewno chcesz usunąć grę:{{game.name}} z półki: {{shelf.name}}</p>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
+                                    <button type="button" class="btn btn-danger">
+                                      <a style="color: white" href="{% url 'delete-from-shelf-game' shelf.id obj.id %}"> Usuń z półki</a>
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                        </td>
+                      <td>
+                        <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#moveModal{{obj.id}}">Przenieś grę</button>
+                            <div class="modal fade" id="moveModal{{obj.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleMoveModalLabel">Przenieś grę</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                    <p>Obecna półka: {{shelf.name}}</p>
+                                    <p>Wybierz półkę na którą chcesz przenieść grę:{{obj.name}}:</p>
+                                    <form method="post" action="{% url 'move-game' shelf.id obj.id %}" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        {{form.as_p}}
+                                        <input type="submit" value="Przenieś">
+                                    </form>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                        </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 {% endblock %}

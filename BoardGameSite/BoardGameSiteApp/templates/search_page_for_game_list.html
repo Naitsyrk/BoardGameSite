@@ -1,26 +1,39 @@
 {% extends "main.html" %}
 
 {% block section %}
+<div class="container">
+    <div class="row">
+        <div class="col-3">
   {% block filter %}
   {% endblock %}
-<p>Lista gier spełniająca kryteria:</p>
-<table class="table">
-    <thead class="thead-dark">
-    <tr>
-      <th scope="col">Zdjęcie</th>
-      <th scope="col">Nazwa gry</th>
-    </tr>
-    </thead>
-    <tbody>
-      {% for obj in filter.qs %}
-        <tr>
-          <td>
-            <a href="{% url 'game-details' obj.id %}">
-              <img src='{{ obj.image.url }}' alt="game" style="width: 200px; float: left; margin-right: 10px;" /></td>
-            </a>
-          <td><a href="{% url 'game-details' obj.id %}">{{ obj.name }}</a></td>
-        </tr>
-      {% endfor %}
-    </tbody>
-</table>
+        </div>
+        <div class="col-9">
+            <p>Lista gier spełniająca kryteria:</p>
+            <table class="table">
+                <thead class="thead-dark">
+                <tr>
+                  <th scope="col">Zdjęcie</th>
+                  <th scope="col">Nazwa gry</th>
+                </tr>
+                </thead>
+                <tbody>
+                  {% for obj in filter.qs %}
+                    <tr>
+                      <td>
+                        <a href="{% url 'game-details' obj.id %}">
+                          <img src='{{ obj.image.url }}' alt="game" style="width: 200px; float: left; margin-right: 10px;" /></td>
+                        </a>
+                      <td><a href="{% url 'game-details' obj.id %}">{{ obj.name }}</a></td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+
+</div>
+
 {% endblock %}
