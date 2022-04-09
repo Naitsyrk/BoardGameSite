@@ -21,7 +21,6 @@ class LandingPage(View):
         ctx = {"other_games": other_games, 'first_game': first_game}
         if logged_user.is_authenticated:
             ctx['logged_user'] = logged_user
-            return render(request, 'landing_page.html', ctx)
         return render(request, 'landing_page.html', ctx)
 
 
@@ -61,7 +60,10 @@ class GameAddView(CreateView):
     def get(self, request):
         logged_user = request.user
         form = GameAddForm()
-        return render(request, 'add-game.html', {'form': form, 'logged_user': logged_user})
+        ctx = {'form': form}
+        if logged_user.is_authenticated:
+            ctx['logged_user'] = logged_user
+        return render(request, 'add-game.html', ctx)
 
     def post(self, request):
         logged_user = request.user
@@ -72,14 +74,16 @@ class GameAddView(CreateView):
             response = f'stworzono grę: {name} i dodano do bazy'
         else:
             response = f'Wprowadź poprawne dane'
+        ctx = {
+                'form': form,
+                'response': response,
+                }
+        if logged_user.is_authenticated:
+            ctx['logged_user'] = logged_user
         return render(
             request,
             'add-game.html',
-            {
-                'form': form,
-                'response': response,
-                'logged_user': logged_user
-            })
+            ctx)
 
 
 class PublishingHouseAddCreateView(CreateView):
@@ -134,7 +138,10 @@ class GameList(View):
     def get(self, request):
         logged_user = request.user
         f = GameFilter(request.GET, queryset=Game.objects.all())
-        return render(request, 'filter_page.html', {'filter': f, 'logged_user': logged_user})
+        ctx = {'filter': f}
+        if logged_user.is_authenticated:
+            ctx['logged_user'] = logged_user
+        return render(request, 'filter_page.html', ctx)
 
     def post(self, request):
         logged_user = request.user
@@ -142,7 +149,10 @@ class GameList(View):
         init_name = request.POST.get('init_name')
         f.data = f.data.copy()
         f.data.setdefault('name', init_name)
-        return render(request, 'filter_page.html', {'filter': f, 'logged_user': logged_user})
+        ctx = {'filter': f}
+        if logged_user.is_authenticated:
+            ctx['logged_user'] = logged_user
+        return render(request, 'filter_page.html', ctx)
 
 
 class Login(View):
@@ -210,7 +220,10 @@ class RandomGamesListView(View):
         logged_user = request.user
         game_filter = self.filter_class(request.GET, queryset=Game.objects.all())
         game = game_filter.qs.order_by('?').first()
-        return render(request, 'random_filter_page.html', {'filter': game_filter, 'game': game, 'logged_user': logged_user})
+        ctx = {'filter': game_filter, 'game': game}
+        if logged_user.is_authenticated:
+            ctx['logged_user'] = logged_user
+        return render(request, 'random_filter_page.html', ctx)
 
       
 class ShelvesView(View):
@@ -240,7 +253,6 @@ class ShelvesView(View):
 
 class DeleteGameFromShelfView(View):
     def get(self, request, shelf_id, game_id):
-        logged_user = request.user
         shelf = Shelf.objects.get(id=shelf_id)
         game = Game.objects.get(id=game_id)
         shelf.games.remove(game)
@@ -249,7 +261,6 @@ class DeleteGameFromShelfView(View):
 
 class DeleteFromShelfGameView(View):
     def get(self, request, shelf_id, game_id):
-        logged_user = request.user
         shelf = Shelf.objects.get(id=shelf_id)
         game = Game.objects.get(id=game_id)
         shelf.games.remove(game)
