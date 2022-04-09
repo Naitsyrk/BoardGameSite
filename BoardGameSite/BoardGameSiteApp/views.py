@@ -71,13 +71,14 @@ class GameAddView(CreateView):
         if form.is_valid():
             form.save()
             name = form.cleaned_data['name']
-            response = f'stworzono grę: {name} i dodano do bazy'
+            game = Game.objects.get(name=name)
+            ctx = {
+                'form': form,
+                'game': game
+            }
         else:
             response = f'Wprowadź poprawne dane'
-        ctx = {
-                'form': form,
-                'response': response,
-                }
+            ctx = {'response': response}
         if logged_user.is_authenticated:
             ctx['logged_user'] = logged_user
         return render(
