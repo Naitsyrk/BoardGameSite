@@ -2,9 +2,6 @@
 
 {% block section %}
     <form action="{% url 'login' %}" method="post">
-        {% if login_error %}
-            <p>{{login_error}}</p>
-        {% endif %}
         {% csrf_token %}
         {{form.as_p}}
         <input type="submit" value="Zaloguj">

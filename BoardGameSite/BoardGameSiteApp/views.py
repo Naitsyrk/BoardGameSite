@@ -18,7 +18,7 @@ class LandingPage(View):
         last_added_games = Game.objects.all().order_by('-id')[:3]
         first_game = last_added_games.first()
         other_games = last_added_games[1:]
-        ctx = {"other_games": other_games, 'first_game': first_game, 'logged_user': logged_user}
+        ctx = {"other_games": other_games, 'first_game': first_game}
         if logged_user.is_authenticated:
             ctx['logged_user'] = logged_user
             return render(request, 'landing_page.html', ctx)
@@ -30,13 +30,13 @@ class GameDetailsView(View):
         logged_user = request.user
         game = Game.objects.get(id=id)
         ctx = {'game': game}
-        form = AddGameToShelfForm()
-        form.fields['shelf'].queryset = Shelf.objects.filter(user=logged_user).exclude(games=game).order_by('name')
-        ctx['form'] = form
         if logged_user.is_authenticated:
+            form = AddGameToShelfForm()
+            form.fields['shelf'].queryset = Shelf.objects.filter(user=logged_user).exclude(games=game).order_by('name')
+            ctx['form'] = form
+            shelves = Shelf.objects.filter(user=logged_user).filter(games=game).order_by('name')
+            ctx['shelves'] = shelves
             ctx['logged_user'] = logged_user
-        shelves = Shelf.objects.filter(user=logged_user).filter(games=game).order_by('name')
-        ctx['shelves'] = shelves
         return render(request, 'game_details.html', ctx)
 
     def post(self, request, id):
@@ -258,29 +258,33 @@ class DeleteFromShelfGameView(View):
 
 class About(View):
     def get(self, request):
+        ctx = {}
         logged_user = request.user
-        return render(request, 'about.html', {'logged_user': logged_user})
+        if logged_user.is_authenticated:
+            ctx['logged_user': logged_user]
+        return render(request, 'about.html', ctx)
 
 
 class Contact(View):
     def get(self, request):
+        ctx = {}
         logged_user = request.user
-        return render(request, 'contact.html', {'logged_user': logged_user})
+        if logged_user.is_authenticated:
+            ctx['logged_user': logged_user]
+        return render(request, 'contact.html', ctx)
 
 
 class ShelfEditView(View):
     def get(self, request, id):
         logged_user = request.user
         shelf = Shelf.objects.get(id=id)
+        ctx = {'shelf': shelf}
+        if logged_user.is_authenticated:
+            ctx['logged_user': logged_user]
         return render(request,
-                      'edit_shelf.html',
-                      {
-                          'shelf': shelf,
-                          'logged_user': logged_user
-                      })
+                      'edit_shelf.html', ctx)
 
     def post(self, request, id):
-        logged_user = request.user
         shelf = Shelf.objects.get(id=id)
         name = request.POST.get('name')
         shelf.name = name
@@ -290,8 +294,7 @@ class ShelfEditView(View):
 
 class ShelfDeleteView(View):
     def get(self, request, id):
-        logged_user = request.user
-        shelf = Shelf.objects.get(id=id).delete()
+        Shelf.objects.get(id=id).delete()
         return redirect('/shelves/')
 
 
@@ -316,12 +319,13 @@ class GameListShelfView(View):
             ctx,
             )
 
+
 class GameListShelvesView(View):
     def get(self, request):
         logged_user = request.user
         games = Game.objects.filter(shelf__user=logged_user).distinct()
         f = GameFilter(request.GET, queryset=games)
-        return render(request, 'filter_shelves.html', {'filter': f})
+        return render(request, 'filter_shelves.html', {'filter': f, 'logged_user': logged_user})
 
     def post(self, request):
         logged_user = request.user
@@ -330,7 +334,7 @@ class GameListShelvesView(View):
         init_name = request.POST.get('init_name')
         f.data = f.data.copy()
         f.data.setdefault('name', init_name)
-        return render(request, 'filter_shelves.html', {'filter': f})
+        return render(request, 'filter_shelves.html', {'filter': f, 'logged_user': logged_user})
 
 
 class MoveGameView(View):
