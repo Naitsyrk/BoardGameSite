@@ -261,7 +261,7 @@ class About(View):
         ctx = {}
         logged_user = request.user
         if logged_user.is_authenticated:
-            ctx['logged_user': logged_user]
+            ctx['logged_user']= logged_user
         return render(request, 'about.html', ctx)
 
 
@@ -270,7 +270,7 @@ class Contact(View):
         ctx = {}
         logged_user = request.user
         if logged_user.is_authenticated:
-            ctx['logged_user': logged_user]
+            ctx['logged_user']= logged_user
         return render(request, 'contact.html', ctx)
 
 
@@ -280,7 +280,7 @@ class ShelfEditView(View):
         shelf = Shelf.objects.get(id=id)
         ctx = {'shelf': shelf}
         if logged_user.is_authenticated:
-            ctx['logged_user': logged_user]
+            ctx['logged_user'] = logged_user
         return render(request,
                       'edit_shelf.html', ctx)
 
