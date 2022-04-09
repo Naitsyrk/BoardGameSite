@@ -21,6 +21,11 @@
                         </tr>
                     </thead>
                 <tbody>
+                {% if response %}
+                     <tr>
+                         <td>Brak gier na półce</td>
+                     </tr>
+                {% else %}
                   {% for obj in filter.qs %}
                     <tr>
                       <td>
@@ -77,6 +82,7 @@
                         </td>
                     </tr>
                   {% endfor %}
+                {% endif %}
                 </tbody>
             </table>
         </div>
