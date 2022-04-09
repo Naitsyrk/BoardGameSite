@@ -31,11 +31,11 @@ class GameDetailsView(View):
         game = Game.objects.get(id=id)
         ctx = {'game': game}
         form = AddGameToShelfForm()
-        form.fields['shelf'].queryset = Shelf.objects.filter(user=logged_user)
+        form.fields['shelf'].queryset = Shelf.objects.filter(user=logged_user).exclude(games=game).order_by('name')
         ctx['form'] = form
         if logged_user.is_authenticated:
             ctx['logged_user'] = logged_user
-        shelves = Shelf.objects.filter(user=logged_user).filter(games=game)
+        shelves = Shelf.objects.filter(user=logged_user).filter(games=game).order_by('name')
         ctx['shelves'] = shelves
         return render(request, 'game_details.html', ctx)
 
@@ -46,13 +46,13 @@ class GameDetailsView(View):
         if logged_user.is_authenticated:
             ctx['logged_user'] = logged_user
             form = AddGameToShelfForm(request.POST)
-            form.fields['shelf'].queryset = Shelf.objects.filter(user=logged_user)
+            form.fields['shelf'].queryset = Shelf.objects.filter(user=logged_user).exclude(games=game).order_by('name')
             if form.is_valid():
                 shelf = form.cleaned_data['shelf']
                 shelf.games.add(game)
                 ctx['form'] = form
                 shelf.games.add(game)
-        shelves = Shelf.objects.filter(user=logged_user).filter(games=game)
+        shelves = Shelf.objects.filter(user=logged_user).filter(games=game).order_by('name')
         ctx['shelves'] = shelves
         return render(request, 'game_details.html', ctx)
 
@@ -253,7 +253,7 @@ class DeleteFromShelfGameView(View):
         shelf = Shelf.objects.get(id=shelf_id)
         game = Game.objects.get(id=game_id)
         shelf.games.remove(game)
-        return redirect(f'/shelf/{shelf.id}')
+        return redirect(f'/shelf_search/{shelf.id}')
 
 
 class About(View):
@@ -302,25 +302,19 @@ class GameListShelfView(View):
         f = GameFilter(request.GET, queryset=shelf.games.all())
         form = AddGameToShelfForm()
         form.fields['shelf'].queryset = Shelf.objects.filter(user=logged_user).exclude(name=shelf.name)
-        return render(
-            request,
-            'filter_shelf.html',
-            {
+        ctx ={
                 'filter': f,
                 'shelf': shelf,
                 'logged_user': logged_user,
                 "form": form,
-            })
-
-    def post(self, request, id):
-        logged_user = request.user
-        shelf = Shelf.objects.get(id=id)
-        f = GameFilter(request.GET, queryset=shelf.games.all())
-        init_name = request.POST.get('init_name')
-        f.data = f.data.copy()
-        f.data.setdefault('name', init_name)
-        return render(request, 'filter_shelf.html', {'filter': f, 'shelf': shelf, 'logged_user': logged_user})
-
+            }
+        if len(f.queryset) == 0:
+            ctx['response'] = "Brak gry na półce"
+        return render(
+            request,
+            'filter_shelf.html',
+            ctx,
+            )
 
 class GameListShelvesView(View):
     def get(self, request):
