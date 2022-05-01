@@ -1,0 +1,25 @@
+{% extends "search_page.html" %}
+
+{% block random %}
+    <div class="row topnav">
+        <div class="col-2">Jesteś na półce: {{shelf.name}}</div>
+        <div class="col-6"></div>
+        {% if response %}
+        {% else %}
+            <div class="col-2">
+                <a href="{% url 'random-game-shelf' shelf.id%}">Losuj grę z tej półki</a>
+            </div>
+            <div class="col-2">
+                <a href="{% url 'random-game-shelf-but' shelf.id%}">Losuj grę z filtrami</a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block filter %}
+    <p> Filtry:</p>
+    <form method="get">
+        {{ filter.form.as_p }}
+        <input type="submit" />
+    </form>
+{% endblock %}

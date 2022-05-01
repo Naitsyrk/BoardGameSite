@@ -20,19 +20,32 @@
             <div class="topnav">
                 <div>
                     <a class="active" href="{% url 'index' %}">Home</a>
-                    <a href="#about">O stronie</a>
-                    <a href="#contact">Kontakt</a>
+                    <a href="{% url 'about' %}">O stronie</a>
+                    <a href="{% url 'contact' %}">Kontakt</a>
                     <a href="{% url 'search' %}">Gry planszowe</a>
-                    <a href="#contact">Dodaj grę</a>
-                    <input type="text" placeholder="Szukaj gry..">
+                    <a href="{% url 'add-game'%}">Dodaj grę</a>
+                    <a href="{% url 'random-game' %}">Losuj grę</a>
+
+                    <a href="{% url 'random-game-but' %}">Filtruj i Losuj</a>
+                    {% if logged_user %}
+                        <a href="{% url 'shelves'%}">Moje półki</a>
+                    {% endif %}
+                    <form class="d-flex" action="{% url 'search' %}" method=POST>
+                        {% csrf_token %}
+                        <input class="form-control me-2" type="text" name="init_name" placeholder="Szukaj gry..">
+                        <button class="btn btn-outline-secondary" type="submit">Szukaj</button>
+                    </form>
                 </div>
              </div>
             <div class="topnav">
                 {% if logged_user %}
-                    <p>{{user.username}} <button><a href="logout">Wyloguj</a></button></p>
+                <div>
+                    <a>{{logged_user.username}}</a>
+                    <a href="{% url 'logout' %}">Wyloguj</a>
+                </div>
                 {% else %}
-                    <a href="login.html">logowanie</a>
-                    <a href="registration.html">rejestracja</a>
+                    <a href="{% url 'login' %}">logowanie</a>
+                    <a href="{% url 'sign-up' %}">rejestracja</a>
                 {% endif %}
             </div>
           </nav>

@@ -1,0 +1,13 @@
+{% extends "main.html" %}
+
+{% block section %}
+{% if response %}
+    {{response}}
+{% endif %}
+    <form action="{% url 'add-publishing-house' %}" method="post">
+        {% csrf_token %}
+        {{form.as_p}}
+        <input type="submit" value="Dodaj">
+    </form>
+
+{% endblock %}

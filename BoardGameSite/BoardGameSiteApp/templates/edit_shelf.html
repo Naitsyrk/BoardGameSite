@@ -1,0 +1,9 @@
+{% extends "main.html" %}
+
+{% block section %}
+    <form action="{% url 'edit-shelf' shelf.id%}" method="post">
+        {% csrf_token %}
+        <input type="text" value="{{shelf.name}}" name="name">
+        <input type="submit" value="Zmień nazwę">
+    </form>
+{% endblock %}

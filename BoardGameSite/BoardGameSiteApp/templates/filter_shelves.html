@@ -1,0 +1,10 @@
+{% extends "search_shelves.html" %}
+
+{% block filter %}
+
+    <p> Filtry:</p>
+    <form method="get">
+        {{ filter.form.as_p }}
+        <input type="submit" />
+    </form>
+{% endblock %}

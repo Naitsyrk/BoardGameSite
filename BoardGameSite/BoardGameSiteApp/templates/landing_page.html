@@ -1,20 +1,6 @@
 {% extends "main.html" %}
 
 {% block section %}
-
-    <div class="topnav" style="height: 80px; overflow: scroll;">
-            <div>Najczęstsze wyszukiwania: </div>
-            <a href="">search1</a>
-            <a href="">search2</a>
-            <a href="">search3</a>
-            <a href="">search4</a>
-            <a href="">search5</a>
-            <a href="">search6</a>
-            <a href="">search7</a>
-            <a href="">search8</a>
-            <a href="">search9</a>
-    </div>
-
     <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
       <div class="carousel-indicators">
         <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -22,33 +8,25 @@
         <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
       </div>
       <div class="carousel-inner">
-        <div class="carousel-item active">
-            <a href="game-details/1/">
-              <img src="..." class="d-block w-100" alt="...">
-              <div class="carousel-caption d-none d-md-block">
-                <h5>Pierwsza ostatnio dodana gra</h5>
-                <p>Opis krótki gry</p>
-              </div>
-            </a>
-        </div>
-        <div class="carousel-item">
-            <a href="game-details/2/">
-            <img src="..." class="d-block w-100" alt="...">
-            <div class="carousel-caption d-none d-md-block">
-                <h5>Druga ostatnio dodana gra</h5>
-                <p>Opis krótki gry</p>
+          <h3 class="topnav">Ostatnio dodane gry:</h3>
+            <div class="carousel-item active">
+                <a href="{% url 'game-details' first_game.id %}">
+                  <center><img src="{{ first_game.image.url }}" alt="game" style="width: 40%; text-align:center"/></center>
+                  <div class="carousel-caption d-none d-md-block">
+                    <h5>{{game.name}}</h5>
+                  </div>
+                </a>
             </div>
-            </a>
-        </div>
-        <div class="carousel-item">
-            <a href=game-details/3/">
-              <img src="..." class="d-block w-100" alt="...">
-              <div class="carousel-caption d-none d-md-block">
-                <h5>Trzecia ostatnio dodana gra</h5>
-                <p>Opis krótki gry</p>
-              </div>
-            </a>
-        </div>
+          {% for game in other_games %}
+            <div class="carousel-item">
+                <a href="{% url 'game-details' game.id %}">
+                  <center><img src="{{ game.image.url }}" alt="game" style="width: 40%;"/></center>
+                  <div class="carousel-caption d-none d-md-block">
+                    <h5>{{game.name}}</h5>
+                  </div>
+                </a>
+            </div>
+          {% endfor %}
       </div>
       <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -58,17 +36,5 @@
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Next</span>
       </button>
-    </div>
-
-    <div>
-        <p>Najczęściej wyszukiwana gra:</p>
-            <a href=game-details/3/">
-              <img src="..." class="d-block w-100" alt="...">
-              <div class="carousel-caption d-none d-md-block">
-                <h5>Tytuł najczęściej wyszukiwanej gry </h5>
-                <p>Opis krótki najczęśniej wyszukiwanej gry</p>
-              </div>
-            </a>
-        </div>
     </div>
 {% endblock %}

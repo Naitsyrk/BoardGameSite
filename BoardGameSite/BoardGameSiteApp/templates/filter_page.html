@@ -1,0 +1,9 @@
+{% extends "search_page_for_game_list.html" %}
+
+{% block filter %}
+    <p> Filtry:</p>
+    <form method="get">
+        {{ filter.form.as_p }}
+        <input type="submit" />
+    </form>
+{% endblock %}
